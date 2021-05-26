@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-
+import DashBoard from "./components/dashboard";
+import NavigationBar from "./components/navbar";
+import SideBar from "./components/sidebar";
+import { BrowserRouter as Router } from "react-router-dom";
 function App() {
+  const closeSideBar = () => {
+    const sidebar = document.querySelector(".side-bar");
+    sidebar.style.transform = "translateX(-400px)";
+    document.querySelector(".disable-div").style.display = "none";
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div onClick={closeSideBar} className="disable-div"></div>
+      <NavigationBar></NavigationBar>
+      <div className="body">
+        <SideBar></SideBar>
+        <DashBoard></DashBoard>
+      </div>
     </div>
   );
 }
