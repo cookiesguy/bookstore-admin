@@ -113,6 +113,18 @@ ul {
 
 li {
   padding: 0px 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
+}
+
+li span {
+  margin-left: 8px;
+  padding-bottom: 2px;
 }
 
 .avatar {
@@ -121,9 +133,9 @@ li {
 }
 
 .pop-up-account {
-  position: absolute;
+  position: fixed;
   top: 90px;
-  right: 60px;
+  right: 30px;
   -webkit-box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
           box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   width: 150px;
@@ -138,10 +150,12 @@ li {
       -ms-flex-direction: column;
           flex-direction: column;
   display: none;
+  z-index: 2;
 }
 
 .pop-up-account p {
   padding: 10px 0px;
+  cursor: pointer;
 }
 
 .pop-up-account p svg {
@@ -180,6 +194,9 @@ li {
   display: -ms-flexbox;
   display: flex;
   padding-right: 30px;
+  width: 100vw;
+  height: 100vh;
+  padding-bottom: 30px;
 }
 
 .access {
@@ -229,17 +246,8 @@ li {
   li {
     padding: 0px 20px;
   }
-  .pop-up-account {
-    right: 40px;
-  }
   .dash-board {
     padding-left: 30px;
-  }
-}
-
-@media screen and (max-width: 530px) {
-  .pop-up-account {
-    right: 40px;
   }
 }
 
@@ -264,6 +272,274 @@ li {
   }
   .pop-up-account {
     right: 20px;
+  }
+}
+
+.data-grid {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  width: 100%;
+  height: 100%;
+  background-color: #ffff;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 20px;
+}
+
+.table {
+  height: 400px;
+  width: 100%;
+  position: relative;
+}
+
+.dialog {
+  padding: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 600px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.data-grid-btn {
+  width: 60px;
+  padding: 10px;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  width: 80px;
+}
+
+.edit-btn {
+  background-color: #169b42;
+  border-color: #169b42;
+}
+
+.input-info {
+  margin: 10px 0px;
+  width: 400px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+}
+
+.save-button {
+  background-color: #169b42;
+  border-radius: 5px;
+  padding: 10px;
+  color: #fff;
+  border-color: #169b42;
+}
+
+.cancle-button {
+  background-color: #921818;
+  border-radius: 5px;
+  padding: 10px;
+  color: #fff;
+  border-color: #921818;
+}
+
+.button-div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  margin-top: 10px;
+  width: 200px;
+}
+
+.error {
+  color: #921818;
+  margin-bottom: 20px;
+  font-size: .8rem;
+  display: none;
+}
+
+.delete-btn {
+  background-color: #921818;
+  border-color: #921818;
+}
+
+.add-button {
+  padding: 10px;
+  background-color: #3c4b64;
+  border-color: #3c4b64;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.8);
+  width: 150px;
+}
+
+.MuiDataGrid-root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.outside-button {
+  padding-bottom: 20px;
+}
+
+.input-header {
+  margin-bottom: 5px;
+  font-size: .8rem;
+}
+
+.select-category {
+  width: 150px;
+  padding: 8px;
+  background-color: #ededed;
+  border: 1px solid;
+}
+
+.loading-row {
+  position: absolute;
+  width: 100%;
+  height: 90%;
+  top: 120px;
+  background-color: #fff;
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #3c4b64;
+  -webkit-animation-timing-function: cubic-bezier(0, 1, 1, 0);
+          animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  -webkit-animation: lds-ellipsis1 0.6s infinite;
+          animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  -webkit-animation: lds-ellipsis2 0.6s infinite;
+          animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  -webkit-animation: lds-ellipsis2 0.6s infinite;
+          animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  -webkit-animation: lds-ellipsis3 0.6s infinite;
+          animation: lds-ellipsis3 0.6s infinite;
+}
+
+@-webkit-keyframes lds-ellipsis1 {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes lds-ellipsis1 {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@-webkit-keyframes lds-ellipsis3 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+}
+
+@keyframes lds-ellipsis3 {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+}
+
+@-webkit-keyframes lds-ellipsis2 {
+  0% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+  100% {
+    -webkit-transform: translate(24px, 0);
+            transform: translate(24px, 0);
+  }
+}
+
+@keyframes lds-ellipsis2 {
+  0% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+  100% {
+    -webkit-transform: translate(24px, 0);
+            transform: translate(24px, 0);
   }
 }
 /*# sourceMappingURL=main.css.map */

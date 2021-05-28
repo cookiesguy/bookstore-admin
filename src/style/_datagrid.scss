@@ -1,0 +1,178 @@
+$red-color :rgb(146, 24, 24);
+$green-color: #169b42;
+.data-grid{
+   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+   width: 100%;
+   height: 100%;
+   background-color: #ffff;
+   border-radius: 10px;
+   display: flex;
+   padding: 20px;
+}
+
+.table{
+    height: 400px;
+    width: 100%;
+    position: relative;
+}
+
+.dialog{
+    padding: 20px;
+    display: flex;
+    width: 600px;
+    flex-direction: column;
+    align-items: center;
+}
+.data-grid-btn{
+    width: 60px;
+    padding:10px;
+    cursor: pointer;
+    color:#fff;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 80px;
+}
+.edit-btn{
+    background-color: $green-color;
+    border-color: $green-color;
+ 
+}
+.input-info{
+    margin: 10px 0px;
+    width: 400px;
+}
+.input{
+    width: 100%;
+    padding: 10px;
+}
+.save-button{
+    background-color: $green-color;
+    border-radius: 5px;
+    padding: 10px;
+    color: #fff;
+    border-color: $green-color;
+}
+.cancle-button{
+    background-color:$red-color;
+    border-radius: 5px;
+    padding: 10px;
+    color: #fff;
+     border-color: $red-color;
+}
+.button-div{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 10px;
+    width: 200px;
+}
+.error{
+    color: $red-color;
+    margin-bottom: 20px;
+    font-size: .8rem;
+    display: none;
+}
+
+.delete-btn{
+    background-color: $red-color;
+    border-color: $red-color;
+}
+.add-button{
+    padding: 10px;
+    background-color: #3c4b64;
+    border-color: #3c4b64;
+    border-radius: 5px;
+    color: rgba(255, 255, 255, 0.8);
+    width: 150px;
+
+}
+
+.MuiDataGrid-root{
+    font-family:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+.outside-button{
+    padding-bottom:20px;
+}
+.input-header{
+    margin-bottom: 5px;
+    font-size: .8rem;
+}
+.select-category{
+    width: 150px;
+    padding: 8px;
+    background-color: #ededed;
+    border: 1px solid;
+}
+
+.loading-row{
+    position: absolute;
+    width: 100%;
+    height: 90%;
+    top: 120px;
+    background-color: #fff;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+ 
+}
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #3c4b64;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}

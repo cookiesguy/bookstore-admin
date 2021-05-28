@@ -1,10 +1,8 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faIdBadge } from "@fortawesome/free-solid-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import { faBars, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faChevronDown, faCog } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../images/amongusavatat.png";
 export default function NavigationBar() {
   const [openPopup, setOpenPopup] = useState(false);
@@ -38,26 +36,18 @@ export default function NavigationBar() {
       </div>
 
       <ul>
-        <li>Dashboard</li>
-        <li>Setting</li>
+        <li>
+          <FontAwesomeIcon icon={faTachometerAlt}></FontAwesomeIcon>
+          <span>Dashboard</span>
+        </li>
+        <li>
+          <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
+          <span>Setting</span>
+        </li>
         <li onClick={openPopupDiv}>
           <img src={Avatar} className="avatar"></img>
         </li>
       </ul>
-      <div className="pop-up-account">
-        <p>
-          <FontAwesomeIcon icon={faIdBadge}></FontAwesomeIcon>Profile
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>Message
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faBell}></FontAwesomeIcon>Notification
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faSignOutAlt}></FontAwesomeIcon>Logout
-        </p>
-      </div>
     </div>
   );
 }
