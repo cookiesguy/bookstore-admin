@@ -1,45 +1,59 @@
 import { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
-import { getAllCategory } from "../../api";
+import Option from "./categoryDialog";
 export default function EditDiaLog(props) {
   const [editBook, setEditBook] = useState({});
   const [category, setCategory] = useState([]);
-  const handleNumberInput = event => {
-    const errorDiv = document.querySelector(".error");
-    const reg = new RegExp("^[0-9]+$");
-    if (reg.test(event.key)) {
-      errorDiv.style.display = "none";
-    } else {
-      errorDiv.style.display = "block";
-    }
-  };
+
   useEffect(() => {
-    async function fetchData() {
-      const res = await getAllCategory();
-      setCategory(res);
-    }
-    fetchData();
-  }, []);
+    setCategory(props.category);
+  }, [props.category]);
   useEffect(() => {
     setEditBook(props.book);
-  }, [props]);
+  }, [props.book]);
+
   const changeName = event => {
-    console.log(event.target.value);
     setEditBook(prevState => {
       return { ...prevState, name: event.target.value };
     });
   };
   const changeAuthor = event => {
-    console.log(event.target.value);
     setEditBook(prevState => {
       return { ...prevState, author: event.target.value };
     });
   };
   const changeAmount = event => {
-    console.log(event.target.value);
+    if (handleNumberInput(event.target.value)) {
+      let value = editBook.amount + parseInt(event.target.value);
+      if (value < 0) {
+        value = 0;
+      }
+      setEditBook(prevState => {
+        return { ...prevState, amount: value };
+      });
+    }
+  };
+  const changeCategoryId = id => {
     setEditBook(prevState => {
-      return { ...prevState, amount: event.target.value };
+      return { ...prevState, type: id };
     });
+  };
+  const handleNumberInput = value => {
+    const errorDiv = document.querySelector(".error");
+    const reg = new RegExp(/^-?[0-9]\d*(\.\d+)?$/);
+    if (reg.test(value)) {
+      errorDiv.style.display = "none";
+      return true;
+    } else {
+      errorDiv.style.display = "block";
+      return false;
+    }
+  };
+  const closeDialog = () => {
+    setEditBook(prevState => {
+      return { ...prevState, amount: props.book.amount };
+    });
+    props.closeEditDialog(null, null, true);
   };
   return (
     <Dialog open={props.openEditDialog}>
@@ -55,17 +69,15 @@ export default function EditDiaLog(props) {
         </div>
         <div className="input-info">
           <p className="input-header">Category</p>
-          <Option currentCategory={props.book.category} category={category}></Option>
+          <Option changeCategoryId={changeCategoryId} currentCategory={props.book.category} category={category}></Option>
         </div>
         <div className="input-info">
-          <p className="input-header"> Amount</p>
-          <input
-            onBlur={changeAmount}
-            onKeyPress={handleNumberInput}
-            className="input"
-            type="number"
-            placeholder={props.book.amount}
-          ></input>
+          <p className="input-header"> Current amount: </p>
+          <span>{editBook.amount}</span>
+        </div>
+        <div className="input-info">
+          <p className="input-header"> Add amount</p>
+          <input onBlur={changeAmount} className="input" type="number"></input>
         </div>
 
         <div className="error">Invalid input!!!</div>
@@ -73,27 +85,11 @@ export default function EditDiaLog(props) {
           <button className="save-button" onClick={e => props.closeEditDialog(props.book, editBook, false)}>
             Save
           </button>
-          <button className="cancle-button" onClick={e => props.closeEditDialog(null, null, true)}>
-            Cancle
+          <button className="cancle-button" onClick={closeDialog}>
+            Cancel
           </button>
         </div>
       </div>
     </Dialog>
-  );
-}
-
-function Option(props) {
-  const list = props.category.map(element => (
-    <option key={element.id} value={element.name}>
-      {element.name}
-    </option>
-  ));
-  const selectBoxChange = event => {
-    console.log(event.target.options.selectedIndex);
-  };
-  return (
-    <select onChange={selectBoxChange} defaultValue={props.currentCategory} className="select-category">
-      {list}
-    </select>
   );
 }

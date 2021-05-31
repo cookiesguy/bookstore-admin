@@ -1,5 +1,7 @@
 $red-color :rgb(146, 24, 24);
-$green-color: #169b42;
+$green-color: #39f;
+$import-btn-color: linear-gradient(45deg,#2eb85c,#169b42);
+$add-btn-color: linear-gradient(45deg,#f9b115,#f6960b);
 .data-grid{
    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
    width: 100%;
@@ -48,11 +50,11 @@ $green-color: #169b42;
     padding: 10px;
 }
 .save-button{
-    background-color: $green-color;
+    background: $import-btn-color;
     border-radius: 5px;
     padding: 10px;
     color: #fff;
-    border-color: $green-color;
+    border-color: #169b42;
 }
 .cancle-button{
     background-color:$red-color;
@@ -78,15 +80,25 @@ $green-color: #169b42;
 .delete-btn{
     background-color: $red-color;
     border-color: $red-color;
+    width: 120px;
+}
+.import-button{
+   padding: 10px;
+    background: $import-btn-color;
+    border-color:#2eb85c;
+    border-radius: 5px;
+    color: #fff;
+    width: 180px;
+    margin-right: 20px;
 }
 .add-button{
     padding: 10px;
-    background-color: #3c4b64;
-    border-color: #3c4b64;
+    background: $add-btn-color;
+    border-color: #f9b115;
     border-radius: 5px;
-    color: rgba(255, 255, 255, 0.8);
+    color: #fff;
     width: 150px;
-
+    margin-right: 20px;
 }
 
 .MuiDataGrid-root{
@@ -94,7 +106,10 @@ $green-color: #169b42;
 }
 
 .outside-button{
-    padding-bottom:20px;
+    margin-bottom:20px;
+    display: flex;
+    flex-wrap: wrap;
+    
 }
 .input-header{
     margin-bottom: 5px;
@@ -152,6 +167,32 @@ $green-color: #169b42;
   left: 56px;
   animation: lds-ellipsis3 0.6s infinite;
 }
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.inputfile + label {
+   width: 150px;
+   display: flex;
+   align-items: center;
+   justify-content: space-evenly;
+}
+.delete-dialog{
+  padding: 30px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+
+}
+
+
 @keyframes lds-ellipsis1 {
   0% {
     transform: scale(0);

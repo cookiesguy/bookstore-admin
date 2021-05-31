@@ -2,18 +2,19 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
-import { faBars, faChevronDown, faCog } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faChevronRight, faCog } from "@fortawesome/free-solid-svg-icons";
 import Avatar from "../images/amongusavatat.png";
+import { Link } from "react-router-dom";
 export default function NavigationBar() {
   const [openPopup, setOpenPopup] = useState(false);
   const openPopupDiv = () => {
     setOpenPopup(!openPopup);
     if (openPopup) {
       document.querySelector(".pop-up-account").style.display = "none";
-      document.querySelector("#narrow-icon").style.transform = "rotate(360deg)";
+      document.querySelector("#narrow-icon").style.transform = "rotate(-2deg)";
     } else {
       document.querySelector(".pop-up-account").style.display = "flex";
-      document.querySelector("#narrow-icon").style.transform = "rotate(180deg)";
+      document.querySelector("#narrow-icon").style.transform = "rotate(90deg)";
     }
   };
 
@@ -31,19 +32,23 @@ export default function NavigationBar() {
         </p>
         <h3>BOOKLAND</h3>
         <div onClick={openPopupDiv} className="narrow-down">
-          <FontAwesomeIcon id="narrow-icon" icon={faChevronDown}></FontAwesomeIcon>
+          <FontAwesomeIcon id="narrow-icon" icon={faChevronRight}></FontAwesomeIcon>
         </div>
       </div>
 
       <ul>
-        <li>
-          <FontAwesomeIcon icon={faTachometerAlt}></FontAwesomeIcon>
-          <span>Dashboard</span>
-        </li>
-        <li>
-          <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
-          <span>Setting</span>
-        </li>
+        <Link to="/">
+          <li>
+            <FontAwesomeIcon icon={faTachometerAlt}></FontAwesomeIcon>
+            <span>Dashboard</span>
+          </li>
+        </Link>
+        <Link to="/settings">
+          <li>
+            <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
+            <span>Setting</span>
+          </li>
+        </Link>
         <li onClick={openPopupDiv}>
           <img src={Avatar} className="avatar"></img>
         </li>

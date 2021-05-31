@@ -1,14 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState, useRef } from "react";
-import { faPenAlt, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { getAllBooks } from "../../api";
-import EditDiaLog from "./editbook";
-import AddNewBookDialog from "./addbook";
+import { faPenAlt, faPlusCircle, faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { addNewBook, deleteBook, getAllBooks, getAllCategory, upDateBook } from "../../api/book";
+import * as XLSX from "xlsx";
+import EditDiaLog from "./EditBookDialog";
+import AddNewBookDialog from "./AddBookDialog";
+import DeleteDialog from "./DeleteDialog";
+
 export default function Books() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
-  const [selectedRow, setSelectedRow] = useState([]);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedRow, setSelectedRow] = useState({});
+  const [category, setCategory] = useState([]);
   const loadingRef = useRef();
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
@@ -41,7 +46,7 @@ export default function Books() {
       headerName: "Delete",
       width: 130,
       renderCell: params => (
-        <button className="data-grid-btn delete-btn" onClick={editButtonClick}>
+        <button className="data-grid-btn delete-btn" onClick={deleteButtonClick}>
           <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
           <span>Delete</span>
         </button>
@@ -49,50 +54,104 @@ export default function Books() {
     },
   ];
 
-  useEffect(() => {
-    async function fetchData() {
-      const res = await getAllBooks();
-      const rowData = [];
-      for (const element of res) {
-        rowData.push({
-          id: element.id,
-          name: element.title,
-          category: element.type.name,
-          author: element.author,
-          amount: element.currentAmount,
-        });
-      }
-      setRows(rowData);
-      loadingRef.current.style.display = "none";
+  async function fetchAllCategory() {
+    const res = await getAllCategory();
+    setCategory(res);
+  }
+
+  async function fetchAllBook() {
+    loadingRef.current.style.display = "flex";
+    const res = await getAllBooks();
+    const rowData = [];
+    for (const element of res) {
+      rowData.push({
+        id: element.id,
+        name: element.title,
+        category: element.type.name,
+        author: element.author,
+        amount: element.currentAmount,
+      });
     }
-    fetchData();
+    setRows(rowData);
+    loadingRef.current.style.display = "none";
+  }
+  useEffect(() => {
+    fetchAllBook();
+    fetchAllCategory();
   }, []);
+
   const [rows, setRows] = useState([]);
   const editButtonClick = el => {
     setOpenEditDialog(true);
   };
+  const deleteButtonClick = el => {
+    setOpenDeleteDialog(true);
+  };
   const handleCellClick = el => {
     setSelectedRow(el.row);
   };
-  const editBookRequest = () => {};
-  const closeEditDialog = (book, newBook, isCancle) => {
+
+  const closeEditDialog = (book, newBook, isCancel) => {
     setOpenEditDialog(false);
-    if (!isCancle) {
-      if (JSON.stringify(book) === JSON.stringify(newBook)) {
-      } else {
-        const index = rows.findIndex(x => x.id === book.id);
-        console.log(rows, newBook);
-        const temp = [...rows];
-        temp[index] = newBook;
-        setRows(temp);
-      }
+    if (!isCancel) {
+      upDateBook(newBook);
+      fetchAllBook();
     }
   };
+
   const addBookClick = () => {
     setOpenAddDialog(true);
   };
-  const closeAdddDialog = () => {
+  const closeAdddDialog = (newBook, isCancel) => {
     setOpenAddDialog(false);
+    if (!isCancel) {
+      addNewBook(newBook);
+    }
+  };
+  const closeDeleteDialog = isConfirm => {
+    setOpenDeleteDialog(false);
+    if (isConfirm) {
+      deleteBook(selectedRow.id);
+    }
+  };
+  const hanldeFileSubmit = e => {
+    e.preventDefault();
+    console.log(e.target.files[0]);
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = evt => {
+      // evt = on_file_select event
+      /* Parse data */
+      const bstr = evt.target.result;
+      const wb = XLSX.read(bstr, { type: "binary" });
+      /* Get first worksheet */
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      /* Convert array of arrays */
+      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+
+      console.log("Data>>>" + data); // shows that excel data is read
+      console.log(convertToJson(data)); // shows data in json format
+    };
+    reader.readAsBinaryString(file);
+  };
+  const convertToJson = csv => {
+    const lines = csv.split("\n");
+
+    const result = [];
+
+    const headers = lines[0].split(",");
+
+    for (let i = 1; i < lines.length; i++) {
+      let obj = {};
+      let currentline = lines[i].split(",");
+
+      for (let j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j];
+      }
+      result.push(obj);
+    }
+    return JSON.stringify(result);
   };
   return (
     <div className="data-grid">
@@ -106,17 +165,37 @@ export default function Books() {
             <div></div>
           </div>
         </div>
-        <EditDiaLog openEditDialog={openEditDialog} book={selectedRow} closeEditDialog={closeEditDialog}></EditDiaLog>
-        <AddNewBookDialog openAddDialog={openAddDialog} closeAddDialog={closeAdddDialog}></AddNewBookDialog>
+
         <div className="outside-button">
           <button onClick={addBookClick} className="add-button data-grid-btn">
             <FontAwesomeIcon icon={faPlusCircle}></FontAwesomeIcon>
             <span>Add new book</span>
           </button>
+          <button className="import-button data-grid-btn">
+            <input
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              onChange={hanldeFileSubmit}
+              type="file"
+              name="file"
+              id="file"
+              className="inputfile"
+            />
+            <label htmlFor="file">
+              <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
+              <span>Import from excel</span>
+            </label>
+          </button>
         </div>
-
         <DataGrid onCellClick={handleCellClick} rows={rows} columns={columns} pageSize={5} />
       </div>
+      <EditDiaLog
+        openEditDialog={openEditDialog}
+        book={selectedRow}
+        closeEditDialog={closeEditDialog}
+        category={category}
+      ></EditDiaLog>
+      <AddNewBookDialog openAddDialog={openAddDialog} closeAddDialog={closeAdddDialog} category={category}></AddNewBookDialog>
+      <DeleteDialog closeDeleteDialog={closeDeleteDialog} openDeleteDialog={openDeleteDialog}></DeleteDialog>
     </div>
   );
 }
