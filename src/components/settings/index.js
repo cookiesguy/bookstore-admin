@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Switch from "@material-ui/core/Switch";
 import getAllConfig from "../../api/settings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,11 +13,14 @@ export default function Setting() {
     MaximumAmountBookLeftAfterSelling: true,
   });
 
+  const loadingRef = useRef();
+
   useEffect(() => {
+    loadingRef.current.style.display = "flex";
     async function fetchData() {
       const res = await getAllConfig();
-      console.log(res);
       setConfigs(res);
+      loadingRef.current.style.display = "none";
     }
     fetchData();
   }, []);
@@ -34,6 +37,15 @@ export default function Setting() {
 
   return (
     <div className="data-grid">
+      <div ref={loadingRef} className="setting-loading">
+        <p>Loading...</p>
+        <div className="lds-ellipsis">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
       {configs.length > 0 ? (
         <div>
           <div className="setting-title">

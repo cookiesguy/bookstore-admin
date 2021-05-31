@@ -10,6 +10,7 @@ $add-btn-color: linear-gradient(45deg,#f9b115,#f6960b);
    border-radius: 10px;
    display: flex;
    padding: 20px;
+   position: relative;
 }
 
 .table{
@@ -133,8 +134,6 @@ $add-btn-color: linear-gradient(45deg,#f9b115,#f6960b);
     align-items: center;
     justify-content: center;
     flex-direction: column;
-
- 
 }
 .lds-ellipsis {
   display: inline-block;

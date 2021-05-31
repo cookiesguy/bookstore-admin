@@ -157,7 +157,7 @@ export default function Books() {
     <div className="data-grid">
       <div className="table">
         <div ref={loadingRef} className="loading-row">
-          <p>Loading data...</p>
+          <p>Loading...</p>
           <div className="lds-ellipsis">
             <div></div>
             <div></div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Dialog } from "@material-ui/core";
-import Option from "./categoryDialog";
+import Option from "./CategoryDialog";
 export default function AddNewBookDialog(props) {
   const [newBook, setNewBook] = useState({ type: 1, amount: "", name: "", author: "" });
   const [category, setCategory] = useState([{ name: "" }]);

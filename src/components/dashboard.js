@@ -1,5 +1,6 @@
 import { Switch, Route } from "react-router-dom";
 import Books from "./books";
+import Login from "./Login";
 import Setting from "./settings";
 export default function DashBoard() {
   return (
@@ -18,7 +19,9 @@ export default function DashBoard() {
         <Route path="/settings">
           <Setting></Setting>
         </Route>
-        <Route></Route>
+        <Route path="/login">
+          <Login></Login>
+        </Route>
       </Switch>
     </div>
   );

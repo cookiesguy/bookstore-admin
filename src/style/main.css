@@ -294,6 +294,7 @@ li span {
   display: -ms-flexbox;
   display: flex;
   padding: 20px;
+  position: relative;
 }
 
 .table {
@@ -650,5 +651,28 @@ li span {
 
 .setting-title svg {
   font-size: 1.5rem;
+}
+
+.setting-loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  right: 0.5px;
+  bottom: 0.5px;
 }
 /*# sourceMappingURL=main.css.map */

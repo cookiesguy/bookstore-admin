@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
-import Option from "./categoryDialog";
+import Option from "./CategoryDialog";
 export default function EditDiaLog(props) {
   const [editBook, setEditBook] = useState({});
   const [category, setCategory] = useState([]);
