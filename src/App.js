@@ -1,6 +1,6 @@
-import DashBoard from "./components/DashBoard";
+import Dashboard from "./components/Dashboard";
 import NavigationBar from "./components/NaviogationBar";
-import SideBar from "./components/SideBar";
+import Sidebar from "./components/Sidebarr";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { faSignOutAlt, faIdBadge } from "@fortawesome/free-solid-svg-icons";
@@ -33,8 +33,8 @@ function App() {
       </div>
       <NavigationBar></NavigationBar>
       <div className="body">
-        <SideBar></SideBar>
-        <DashBoard></DashBoard>
+        <Sidebar></Sidebar>
+        <Dashboard></Dashboard>
       </div>
     </div>
   );

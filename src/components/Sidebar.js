@@ -5,7 +5,7 @@ import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { faWallet } from "@fortawesome/free-solid-svg-icons";
 import { faChartLine } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-export default function SideBar() {
+export default function Sidebar() {
   const handleRedirect = () => {
     const width = document.body.clientWidth;
     if (width < 600) {

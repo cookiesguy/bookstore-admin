@@ -386,6 +386,7 @@ li span {
   margin-bottom: 20px;
   font-size: .8rem;
   display: none;
+  font-weight: bold;
 }
 
 .delete-btn {

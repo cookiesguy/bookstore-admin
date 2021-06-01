@@ -2,7 +2,7 @@ import { Switch, Route } from "react-router-dom";
 import Books from "./books";
 import Login from "./Login";
 import Setting from "./settings";
-export default function DashBoard() {
+export default function Dashboard() {
   return (
     <div className="dash-board">
       <Switch>

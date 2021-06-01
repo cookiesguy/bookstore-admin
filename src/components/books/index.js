@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataGrid } from "@material-ui/data-grid";
+
 import { useEffect, useState, useRef } from "react";
 import { faPenAlt, faPlusCircle, faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { addNewBook, deleteBook, getAllBooks, getAllCategory, upDateBook } from "../../api/book";
@@ -7,11 +8,14 @@ import * as XLSX from "xlsx";
 import EditDiaLog from "./EditBookDialog";
 import AddNewBookDialog from "./AddBookDialog";
 import DeleteDialog from "./DeleteDialog";
+import SnackBar from "./SnackBar";
 
 export default function Books() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackBarMessage, setSnackBarMessage] = useState("");
   const [selectedRow, setSelectedRow] = useState({});
   const [category, setCategory] = useState([]);
   const loadingRef = useRef();
@@ -73,6 +77,7 @@ export default function Books() {
       });
     }
     setRows(rowData);
+    setOpenSnackBar(false);
     loadingRef.current.style.display = "none";
   }
   useEffect(() => {
@@ -94,8 +99,12 @@ export default function Books() {
   const closeEditDialog = (book, newBook, isCancel) => {
     setOpenEditDialog(false);
     if (!isCancel) {
-      upDateBook(newBook);
-      fetchAllBook();
+      const result = upDateBook(newBook);
+      if (result) {
+        setOpenSnackBar(true);
+        setSnackBarMessage("Action completed loading data...");
+        setTimeout(fetchAllBook, 3000);
+      }
     }
   };
 
@@ -105,13 +114,23 @@ export default function Books() {
   const closeAdddDialog = (newBook, isCancel) => {
     setOpenAddDialog(false);
     if (!isCancel) {
-      addNewBook(newBook);
+      const result = addNewBook(newBook);
+      if (result) {
+        setOpenSnackBar(true);
+        setSnackBarMessage("Action completed loading data...");
+        setTimeout(fetchAllBook, 3000);
+      }
     }
   };
   const closeDeleteDialog = isConfirm => {
     setOpenDeleteDialog(false);
     if (isConfirm) {
-      deleteBook(selectedRow.id);
+      const result = deleteBook(selectedRow.id);
+      if (result) {
+        setOpenSnackBar(true);
+        setSnackBarMessage("Action completed loading data...");
+        setTimeout(fetchAllBook, 3000);
+      }
     }
   };
   const hanldeFileSubmit = e => {
@@ -196,6 +215,7 @@ export default function Books() {
       ></EditDiaLog>
       <AddNewBookDialog openAddDialog={openAddDialog} closeAddDialog={closeAdddDialog} category={category}></AddNewBookDialog>
       <DeleteDialog closeDeleteDialog={closeDeleteDialog} openDeleteDialog={openDeleteDialog}></DeleteDialog>
+      <SnackBar openSnackBar={openSnackBar} message={snackBarMessage}></SnackBar>
     </div>
   );
 }

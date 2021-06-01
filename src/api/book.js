@@ -26,13 +26,12 @@ export async function upDateBook(book) {
     method: "POST",
     body: JSON.stringify(data),
   });
-  console.log(JSON.stringify(data));
-  const jsonRes = await res.json();
-  console.log(jsonRes);
+  if (res.ok) {
+    return true;
+  }
 }
 
 export async function addNewBook(newBook) {
-  console.log(newBook);
   const data = {
     Id: newBook.id,
     Title: newBook.name,
@@ -40,7 +39,6 @@ export async function addNewBook(newBook) {
     TypeID: newBook.type,
     Amount: parseInt(newBook.amount),
   };
-  console.log(JSON.stringify(data));
   const res = await fetch("/api/book", {
     headers: {
       "Content-Type": "application/json",
@@ -49,12 +47,20 @@ export async function addNewBook(newBook) {
     method: "POST",
     body: JSON.stringify(data),
   });
-  const jsonRes = await res.json();
-  console.log(jsonRes);
+  if (res.ok) {
+    return true;
+  }
 }
 
 export async function deleteBook(id) {
-  const res = await fetch(`/api/book/delete/${id}`);
-  const data = await res.json();
-  console.log(data);
+  const res = await fetch(`/api/book/delete/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    method: "POST",
+  });
+  if (res.ok) {
+    return true;
+  }
 }

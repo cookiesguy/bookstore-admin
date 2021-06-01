@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Switch from "@material-ui/core/Switch";
-import getAllConfig from "../../api/settings";
+import { getAllConfig, toogleConfig } from "../../api/settings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 
@@ -33,6 +33,7 @@ export default function Setting() {
 
   const hanldeToggleChange = event => {
     setIsCheck({ ...isCheck, [event.target.name]: event.target.checked });
+    toogleConfig(event.target.name);
   };
 
   return (
@@ -53,27 +54,13 @@ export default function Setting() {
             <span>custom settings</span>
           </div>
           <div className="config-item">
-            <h4>Minimum import book</h4>
+            <h4>Maximum Debt Customer</h4>
             <p>Value: {configs[0].value}</p>
             <div>
               <span>Enable:</span>
               <Switch
                 onChange={hanldeToggleChange}
-                checked={isCheck.MinimumImportBook}
-                color="primary"
-                name="MinimumImportBook"
-                inputProps={{ "aria-label": "primary checkbox" }}
-              />
-            </div>
-          </div>
-          <div className="config-item">
-            <h4>Maximum amount book left before import</h4>
-            <p>Value: {configs[1].value}</p>
-            <div>
-              <span>Enable:</span>
-              <Switch
-                onChange={hanldeToggleChange}
-                checked={isCheck.MaximumAmountBookLeftBeforeImport}
+                checked={isCheck.MaximumDebtCustomer}
                 color="primary"
                 name="MaximumAmountBookLeftBeforeImport"
                 inputProps={{ "aria-label": "primary checkbox" }}
@@ -81,13 +68,13 @@ export default function Setting() {
             </div>
           </div>
           <div className="config-item">
-            <h4>Maximum customer debt</h4>
-            <p>Value: {configs[2].value}</p>
+            <h4>Maximum Amount Book Left Before Import</h4>
+            <p>Value: {configs[1].value}</p>
             <div>
               <span>Enable:</span>
               <Switch
                 onChange={hanldeToggleChange}
-                checked={isCheck.MaximumDebtCustomer}
+                checked={isCheck.MaximumAmountBookLeftBeforeImport}
                 color="primary"
                 name="MaximumDebtCustomer"
                 inputProps={{ "aria-label": "primary checkbox" }}
@@ -95,8 +82,8 @@ export default function Setting() {
             </div>
           </div>
           <div className="config-item">
-            <h4>Maximum amount book left after selling</h4>
-            <p>Value: {configs[3].value}</p>
+            <h4>Maximum Amount Book Left After Selling</h4>
+            <p>Value: {configs[2].value}</p>
             <div>
               <span>Enable:</span>
               <Switch
@@ -104,6 +91,20 @@ export default function Setting() {
                 checked={isCheck.MaximumAmountBookLeftAfterSelling}
                 color="primary"
                 name="MaximumAmountBookLeftAfterSelling"
+                inputProps={{ "aria-label": "primary checkbox" }}
+              />
+            </div>
+          </div>
+          <div className="config-item">
+            <h4>Minimum Import Book</h4>
+            <p>Value: {configs[3].value}</p>
+            <div>
+              <span>Enable:</span>
+              <Switch
+                onChange={hanldeToggleChange}
+                checked={isCheck.MinimumImportBook}
+                color="primary"
+                name="MinimumImportBook"
                 inputProps={{ "aria-label": "primary checkbox" }}
               />
             </div>
