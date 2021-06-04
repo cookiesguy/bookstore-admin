@@ -36,9 +36,9 @@ export default function AddNewBookDialog(props) {
       return { ...prevState, amount: event.target.value };
     });
   };
-  const changeCategoryId = id => {
+  const changeCategoryId = object => {
     setNewBook(prevState => {
-      return { ...prevState, type: id };
+      return { ...prevState, category: object };
     });
   };
   const checkBookInfoValid = () => {

@@ -38,15 +38,17 @@ export default function Sidebar() {
       <div className="side-bar-item">
         <div>
           <FontAwesomeIcon icon={faUserFriends}></FontAwesomeIcon>
-          <span>User</span>
+          <span>Customer</span>
         </div>
       </div>
-      <div className="side-bar-item">
-        <div>
-          <FontAwesomeIcon icon={faWallet}></FontAwesomeIcon>
-          <span>Order</span>
+      <Link to="/order" onClick={handleRedirect}>
+        <div className="side-bar-item">
+          <div>
+            <FontAwesomeIcon icon={faWallet}></FontAwesomeIcon>
+            <span>Order</span>
+          </div>
         </div>
-      </div>
+      </Link>
       <div className="side-bar-item">
         <div>
           <FontAwesomeIcon icon={faChartLine}></FontAwesomeIcon>

@@ -1,6 +1,6 @@
 import Dashboard from "./components/Dashboard";
 import NavigationBar from "./components/NaviogationBar";
-import Sidebar from "./components/Sidebarr";
+import Sidebar from "./components/Sidebar";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { faSignOutAlt, faIdBadge } from "@fortawesome/free-solid-svg-icons";

@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog } from "@material-ui/core";
 import Option from "./CategoryDialog";
 import { getConfigItem } from "../../api/settings";
+import { VoiceOverOffSharp } from "@material-ui/icons";
+
 export default function EditDiaLog(props) {
-  const [editBook, setEditBook] = useState({});
+  const [editBook, setEditBook] = useState({
+    category: {
+      name: "",
+    },
+  });
   const [category, setCategory] = useState([]);
+  const [tempAmount, setTempAmount] = useState(0);
   const [minimumImportBook, setMinimumImportBook] = useState({});
   const [maximumBook, setMaximumBook] = useState({});
+  const errorRef = useRef();
   useEffect(() => {
     setCategory(props.category);
   }, [props.category]);
@@ -32,51 +40,77 @@ export default function EditDiaLog(props) {
       return { ...prevState, author: event.target.value };
     });
   };
-  const changeAmount = event => {
-    if (handleNumberInput(event.target.value)) {
-      const errorDiv = document.querySelector(".error");
-      //Check mininum add amount
-      let addAmount = parseInt(event.target.value);
-      if (addAmount > 0 && addAmount < 150 && minimumImportBook.status) {
-        errorDiv.style.display = "block";
-        return;
-      }
-
-      //Check maximum amount
-      let value = editBook.amount + parseInt(event.target.value);
-      if (value < 0) {
-        value = 1;
-      } else if (value > parseInt(maximumBook.value) && maximumBook.status) {
-        errorDiv.style.display = "block";
-        return;
-      }
-
+  const changeAmount = () => {
+    if (tempAmount < minimumImportBook.value && tempAmount > 0 && minimumImportBook.status) {
+      errorRef.current.style.display = "block";
+      return;
+    }
+    let value = tempAmount + editBook.amount;
+    if (value > maximumBook.value && maximumBook.status) {
+      errorRef.current.style.display = "block";
+      return;
+    }
+    errorRef.current.style.display = "none";
+    if (value < 0) {
+      setEditBook(prevState => {
+        return { ...prevState, amount: 1 };
+      });
+    } else {
       setEditBook(prevState => {
         return { ...prevState, amount: value };
       });
     }
   };
-  const changeCategoryId = id => {
+  const changeCategoryId = object => {
     setEditBook(prevState => {
-      return { ...prevState, type: id };
+      return { ...prevState, category: object };
     });
   };
-  const handleNumberInput = value => {
-    const errorDiv = document.querySelector(".error");
+  const handleNumberInput = event => {
     const reg = new RegExp(/^-?[0-9]\d*(\.\d+)?$/);
-    if (reg.test(value)) {
-      errorDiv.style.display = "none";
+    if (reg.test(event.target.value)) {
+      errorRef.current.style.display = "none";
+      setTempAmount(parseInt(event.target.value));
       return true;
     } else {
-      errorDiv.style.display = "block";
+      errorRef.current.style.display = "block";
       return false;
     }
   };
-  const closeDialog = () => {
-    setEditBook(prevState => {
-      return { ...prevState, amount: props.book.amount };
-    });
-    props.closeEditDialog(null, null, true);
+  const checkBookInfoValid = () => {
+    if (!checkStringValid(editBook.name) || !checkStringValid(editBook.author)) {
+      errorRef.current.style.display = "block";
+      return false;
+    } else {
+      errorRef.current.style.display = "none";
+      return true;
+    }
+  };
+  const checkStringValid = str => {
+    for (let i = 0; i < str.length; i++) {
+      let ascii = str.charCodeAt(i);
+      if (ascii > 47 && ascii < 58) {
+        return true;
+      } else if (ascii > 47 && ascii < 91) {
+        return true;
+      } else if (ascii > 96 && ascii < 123) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const closeDialog = isCancel => {
+    if (isCancel) {
+      setEditBook(prevState => {
+        return { ...prevState, amount: props.book.amount };
+      });
+      props.closeEditDialog(null, null, true);
+    } else {
+      if (checkBookInfoValid()) {
+        props.closeEditDialog(null, editBook, false);
+      }
+    }
   };
   return (
     <Dialog open={props.openEditDialog}>
@@ -92,7 +126,11 @@ export default function EditDiaLog(props) {
         </div>
         <div className="input-info">
           <p className="input-header">Category</p>
-          <Option changeCategoryId={changeCategoryId} currentCategory={props.book.category} category={category}></Option>
+          {props.book.category === undefined ? (
+            <p></p>
+          ) : (
+            <Option changeCategoryId={changeCategoryId} currentCategory={props.book.category.name} category={category}></Option>
+          )}
         </div>
         {maximumBook.status ? (
           <div className="input-info">
@@ -118,15 +156,20 @@ export default function EditDiaLog(props) {
 
         <div className="input-info">
           <p className="input-header"> Add amount</p>
-          <input onBlur={changeAmount} className="input" type="number"></input>
+          <div className="plus-block">
+            <input onBlur={handleNumberInput} type="number"></input>
+            <button onClick={changeAmount}>Add</button>
+          </div>
         </div>
 
-        <div className="error">Invalid input, please check all condition</div>
+        <div ref={errorRef} className="error">
+          Invalid input, please check all condition
+        </div>
         <div className="button-div">
-          <button className="save-button" onClick={e => props.closeEditDialog(props.book, editBook, false)}>
+          <button className="save-button" onClick={e => closeDialog(false)}>
             Save
           </button>
-          <button className="cancle-button" onClick={closeDialog}>
+          <button className="cancle-button" onClick={e => closeDialog(true)}>
             Cancel
           </button>
         </div>

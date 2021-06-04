@@ -1,140 +1,138 @@
-$red-color :rgb(146, 24, 24);
+$red-color: rgb(146, 24, 24);
 $green-color: #39f;
-$import-btn-color: linear-gradient(45deg,#2eb85c,#169b42);
-$add-btn-color: linear-gradient(45deg,#f9b115,#f6960b);
-.data-grid{
-   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-   width: 100%;
-   height: 100%;
-   background-color: #ffff;
-   border-radius: 10px;
-   display: flex;
-   padding: 20px;
-   position: relative;
+$import-btn-color: linear-gradient(45deg, #2eb85c, #169b42);
+$add-btn-color: linear-gradient(45deg, #f9b115, #f6960b);
+.data-grid {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  width: 100%;
+  height: 100%;
+  background-color: #ffff;
+  border-radius: 10px;
+  display: flex;
+  padding: 20px;
+  position: relative;
 }
 
-.table{
-    height: 400px;
-    width: 100%;
-    position: relative;
+.table {
+  height: 400px;
+  width: 100%;
+  position: relative;
 }
 
-.dialog{
-    padding: 20px;
-    display: flex;
-    width: 600px;
-    flex-direction: column;
-    align-items: center;
+.dialog {
+  padding: 20px;
+  display: flex;
+  width: 600px;
+  flex-direction: column;
+  align-items: center;
 }
-.data-grid-btn{
-    width: 60px;
-    padding:10px;
-    cursor: pointer;
-    color:#fff;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 80px;
+.data-grid-btn {
+  width: 60px;
+  padding: 10px;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 80px;
 }
-.edit-btn{
-    background-color: $green-color;
-    border-color: $green-color;
- 
+.edit-btn {
+  background-color: $green-color;
+  border-color: $green-color;
 }
-.input-info{
-    margin: 10px 0px;
-    width: 400px;
+.input-info {
+  margin: 8px 0px;
+  width: 400px;
 }
-.input{
-    width: 100%;
-    padding: 10px;
+.input {
+  width: 100%;
+  padding: 10px;
 }
-.save-button{
-    background: $import-btn-color;
-    border-radius: 5px;
-    padding: 10px;
-    color: #fff;
-    border-color: #169b42;
+.save-button {
+  background: $import-btn-color;
+  border-radius: 5px;
+  padding: 10px;
+  color: #fff;
+  border-color: #169b42;
 }
-.cancle-button{
-    background-color:$red-color;
-    border-radius: 5px;
-    padding: 10px;
-    color: #fff;
-     border-color: $red-color;
+.cancle-button {
+  background-color: $red-color;
+  border-radius: 5px;
+  padding: 10px;
+  color: #fff;
+  border-color: $red-color;
 }
-.button-div{
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-top: 10px;
-    width: 200px;
+.button-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 200px;
 }
-.error{
-    color: $red-color;
-    margin-bottom: 20px;
-    font-size: .8rem;
-    display: none;
-    font-weight: bold;
+.error {
+  color: $red-color;
+  margin-bottom: 15px;
+  font-size: 0.8rem;
+  display: none;
+  font-weight: bold;
 }
 
-.delete-btn{
-    background-color: $red-color;
-    border-color: $red-color;
-    width: 120px;
+.delete-btn {
+  background-color: $red-color;
+  border-color: $red-color;
+  width: 120px;
 }
-.import-button{
-   padding: 10px;
-    background: $import-btn-color;
-    border-color:#2eb85c;
-    border-radius: 5px;
-    color: #fff;
-    width: 180px;
-    margin-right: 20px;
+.import-button {
+  padding: 10px;
+  background: $import-btn-color;
+  border-color: #2eb85c;
+  border-radius: 5px;
+  color: #fff;
+  width: 180px;
+  margin-right: 20px;
 }
-.add-button{
-    padding: 10px;
-    background: $add-btn-color;
-    border-color: #f9b115;
-    border-radius: 5px;
-    color: #fff;
-    width: 150px;
-    margin-right: 20px;
-}
-
-.MuiDataGrid-root{
-    font-family:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+.add-button {
+  padding: 10px;
+  background: $add-btn-color;
+  border-color: #f9b115;
+  border-radius: 5px;
+  color: #fff;
+  width: 150px;
+  margin-right: 20px;
 }
 
-.outside-button{
-    margin-bottom:20px;
-    display: flex;
-    flex-wrap: wrap;
-    
-}
-.input-header{
-    margin-bottom: 5px;
-    font-size: .8rem;
-}
-.select-category{
-    width: 150px;
-    padding: 8px;
-    background-color: #ededed;
-    border: 1px solid;
+.MuiDataGrid-root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
 }
 
-.loading-row{
-    position: absolute;
-    width: 100%;
-    height: 90%;
-    top: 120px;
-    background-color: #fff;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+.outside-button {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.input-header {
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+}
+.select-category {
+  width: 150px;
+  padding: 8px;
+  background-color: #ededed;
+  border: 1px solid;
+}
+
+.loading-row {
+  position: absolute;
+  width: 100%;
+  height: 90%;
+  top: 120px;
+  background-color: #fff;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 .lds-ellipsis {
   display: inline-block;
@@ -169,29 +167,38 @@ $add-btn-color: linear-gradient(45deg,#f9b115,#f6960b);
 }
 
 .inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
 .inputfile + label {
-   width: 150px;
-   display: flex;
-   align-items: center;
-   justify-content: space-evenly;
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
-.delete-dialog{
+.delete-dialog {
   padding: 30px;
   height: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-
 }
 
+.plus-block {
+  input {
+    padding: 10px;
+    margin-right: 20px;
+  }
+  button {
+    padding: 10px;
+  }
+  margin-bottom: 10px;
+}
 
 @keyframes lds-ellipsis1 {
   0% {

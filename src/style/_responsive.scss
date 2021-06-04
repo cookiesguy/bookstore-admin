@@ -1,51 +1,49 @@
-@media screen and (min-width:610px) {
-    .side-bar{     
-         transform: translateX(0px) !important;
+@media screen and (min-width: 610px) {
+    .side-bar {
+        transform: translateX(0px) !important;
     }
-   .disable-div{
-       display: none !important;
-   }
-    
+    .disable-div {
+        display: none !important;
+    }
 }
-@media screen and (max-width:600px) {
-    .side-bar{
-     
-         transform: translateX(-400px) ;
+@media screen and (max-width: 600px) {
+    .side-bar {
+        transform: translateX(-400px);
     }
-    .nav-bar{
+    .nav-bar {
         padding: 40px 0px;
         justify-content: center;
     }
-    .title{
-         display: flex;
-         margin-right: 20px;
+    .title {
+        display: flex;
+        margin-right: 20px;
     }
-  
-    li{
+
+    li {
         padding: 0px 20px;
     }
-    .dash-board{
+    .dash-board {
         padding-left: 30px;
     }
 }
-@media screen and (max-width:440px) {
-   .narrow-down{
-       display: flex;
-   }
-   ul{
-       display: none;
-   }
-
-    .title{
-         display: flex;
-         margin-right: 30px;
-         justify-content: space-between;
-         width: 200px;
+@media screen and (max-width: 440px) {
+    .narrow-down {
+        display: flex;
     }
-      .pop-up-account{
+    ul {
+        display: none;
+    }
+
+    .title {
+        display: flex;
+        margin-right: 30px;
+        justify-content: space-between;
+        width: 200px;
+    }
+    .pop-up-account {
         right: 20px;
     }
-    .config-item{
+    .config-item {
         margin: 20px 0px;
         font-size: 0.9rem;
     }

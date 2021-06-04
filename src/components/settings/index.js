@@ -54,15 +54,15 @@ export default function Setting() {
             <span>custom settings</span>
           </div>
           <div className="config-item">
-            <h4>Maximum Debt Customer</h4>
+            <h4>Maximum Amount Book Left After Selling</h4>
             <p>Value: {configs[0].value}</p>
             <div>
               <span>Enable:</span>
               <Switch
                 onChange={hanldeToggleChange}
-                checked={isCheck.MaximumDebtCustomer}
+                checked={isCheck.MaximumAmountBookLeftAfterSelling}
                 color="primary"
-                name="MaximumAmountBookLeftBeforeImport"
+                name="MaximumAmountBookLeftAfterSelling"
                 inputProps={{ "aria-label": "primary checkbox" }}
               />
             </div>
@@ -76,21 +76,21 @@ export default function Setting() {
                 onChange={hanldeToggleChange}
                 checked={isCheck.MaximumAmountBookLeftBeforeImport}
                 color="primary"
-                name="MaximumDebtCustomer"
+                name="MaximumAmountBookLeftBeforeImport"
                 inputProps={{ "aria-label": "primary checkbox" }}
               />
             </div>
           </div>
           <div className="config-item">
-            <h4>Maximum Amount Book Left After Selling</h4>
+            <h4>Maximum Debt Customer</h4>
             <p>Value: {configs[2].value}</p>
             <div>
               <span>Enable:</span>
               <Switch
                 onChange={hanldeToggleChange}
-                checked={isCheck.MaximumAmountBookLeftAfterSelling}
+                checked={isCheck.MaximumDebtCustomer}
                 color="primary"
-                name="MaximumAmountBookLeftAfterSelling"
+                name="MaximumDebtCustomer"
                 inputProps={{ "aria-label": "primary checkbox" }}
               />
             </div>

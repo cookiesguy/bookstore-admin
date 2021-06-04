@@ -1,8 +1,11 @@
 export async function getAllConfig() {
   const res = await fetch("/api/configurations");
-  const data = await res.json();
-  console.log(data);
-  return data;
+  if (res.ok) {
+    const data = await res.json();
+    console.log(data);
+    return data;
+  }
+  return [];
 }
 
 export async function toogleConfig(name) {

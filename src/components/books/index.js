@@ -22,7 +22,12 @@ export default function Books() {
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     { field: "name", headerName: "Name", width: 350 },
-    { field: "category", headerName: "Category", width: 150 },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 150,
+      renderCell: params => <span>{params.value.name}</span>,
+    },
     {
       field: "author",
       headerName: "Author",
@@ -60,25 +65,33 @@ export default function Books() {
 
   async function fetchAllCategory() {
     const res = await getAllCategory();
-    setCategory(res);
+    if (res !== null) {
+      setCategory(res);
+    }
   }
 
   async function fetchAllBook() {
-    loadingRef.current.style.display = "flex";
+    if (loadingRef.current !== null) loadingRef.current.style.display = "flex";
     const res = await getAllBooks();
-    const rowData = [];
-    for (const element of res) {
-      rowData.push({
-        id: element.id,
-        name: element.title,
-        category: element.type.name,
-        author: element.author,
-        amount: element.currentAmount,
-      });
+    if (res !== null) {
+      const rowData = [];
+      for (const element of res) {
+        rowData.push({
+          id: element.id,
+          name: element.title,
+          category: element.type,
+          author: element.author,
+          amount: element.currentAmount,
+        });
+      }
+      setRows(rowData);
+      setOpenSnackBar(false);
+      loadingRef.current !== null && (loadingRef.current.style.display = "none");
+    } else {
+      loadingRef.current.style.display = "none";
+      setOpenSnackBar(true);
+      setSnackBarMessage("Fail to get data");
     }
-    setRows(rowData);
-    setOpenSnackBar(false);
-    loadingRef.current.style.display = "none";
   }
   useEffect(() => {
     fetchAllBook();
@@ -103,7 +116,7 @@ export default function Books() {
       if (result) {
         setOpenSnackBar(true);
         setSnackBarMessage("Action completed loading data...");
-        setTimeout(fetchAllBook, 3000);
+        setTimeout(fetchAllBook, 2000);
       }
     }
   };
@@ -118,7 +131,7 @@ export default function Books() {
       if (result) {
         setOpenSnackBar(true);
         setSnackBarMessage("Action completed loading data...");
-        setTimeout(fetchAllBook, 3000);
+        setTimeout(fetchAllBook, 2000);
       }
     }
   };
@@ -129,7 +142,7 @@ export default function Books() {
       if (result) {
         setOpenSnackBar(true);
         setSnackBarMessage("Action completed loading data...");
-        setTimeout(fetchAllBook, 3000);
+        setTimeout(fetchAllBook, 2000);
       }
     }
   };

@@ -2,6 +2,7 @@ import { Switch, Route } from "react-router-dom";
 import Books from "./books";
 import Login from "./Login";
 import Setting from "./settings";
+import Order from "./orders";
 export default function Dashboard() {
   return (
     <div className="dash-board">
@@ -21,6 +22,9 @@ export default function Dashboard() {
         </Route>
         <Route path="/login">
           <Login></Login>
+        </Route>
+        <Route path="/order">
+          <Order></Order>
         </Route>
       </Switch>
     </div>

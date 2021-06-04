@@ -4,9 +4,14 @@ export default function Option(props) {
       {element.name}
     </option>
   ));
+
   const selectBoxChange = event => {
-    props.changeCategoryId(event.target.options.selectedIndex + 1);
+    props.changeCategoryId({
+      id: event.target.options.selectedIndex + 1,
+      name: event.target.value,
+    });
   };
+        
   return (
     <select onChange={selectBoxChange} defaultValue={props.currentCategory} className="select-category">
       {list}
