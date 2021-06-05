@@ -1,23 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
 import Option from "./CategoryDialog";
+
 export default function AddNewBookDialog(props) {
   const [newBook, setNewBook] = useState({ type: 1, amount: "", name: "", author: "" });
   const [category, setCategory] = useState([{ name: "" }]);
-  const errorRef = useRef();
+  const [errorMessage, setErrorMessage] = useState({ isDisplay: false, message: "" });
 
   useEffect(() => {
     setCategory(props.category);
   }, [props.category]);
-
-  const handleNumberInput = event => {
-    const reg = new RegExp("^[0-9]+$");
-    if (reg.test(event.key)) {
-      errorRef.current.style.display = "none";
-    } else {
-      errorRef.current.style.display = "block";
-    }
-  };
 
   const changeName = event => {
     setNewBook(prevState => {
@@ -42,31 +34,34 @@ export default function AddNewBookDialog(props) {
     });
   };
   const checkBookInfoValid = () => {
-    if (
-      !checkStringValid(newBook.name) ||
-      !checkStringValid(newBook.author) ||
-      newBook.amount.length < 1 ||
-      isNaN(newBook.amount)
-    ) {
-      errorRef.current.style.display = "block";
+    if (!checkStringValid(newBook.name) || !checkStringValid(newBook.author) || !checkValidAmount()) {
     } else {
-      errorRef.current.style.display = "none";
-      setNewBook({ type: 1, amount: "", name: "", author: "" });
+      setErrorMessage({ isDisplay: false, message: "" });
       props.closeAddDialog(newBook, false);
     }
   };
+
   const checkStringValid = str => {
-    for (let i = 0; i < str.length; i++) {
-      let ascii = str.charCodeAt(i);
-      if (ascii > 47 && ascii < 58) {
-        return true;
-      } else if (ascii > 47 && ascii < 91) {
-        return true;
-      } else if (ascii > 96 && ascii < 123) {
-        return true;
-      }
+    console.log("valid info");
+    const regex = /[^A-Za-z0-9]+/;
+    if (regex.test(str) || str === "") {
+      setErrorMessage({ isDisplay: true, message: "Invalid book infomation" });
+      return false;
     }
-    return false;
+    setErrorMessage({ isDisplay: false, message: "" });
+    return true;
+  };
+
+  const checkValidAmount = () => {
+    console.log("valid number");
+    const regex = new RegExp("^[0-9]*$");
+    if (regex.test(newBook.amount) || newBook.amount !== "") {
+      setErrorMessage({ isDisplay: false, message: "" });
+      return true;
+    } else {
+      setErrorMessage({ isDisplay: true, message: "Invalid number please check all condition" });
+      return false;
+    }
   };
 
   return category.length > 0 ? (
@@ -88,12 +83,10 @@ export default function AddNewBookDialog(props) {
         </div>
         <div className="input-info">
           <p className="input-header">Amount</p>
-          <input onBlur={changeAmount} onKeyPress={handleNumberInput} className="input" type="number"></input>
+          <input onBlur={changeAmount} className="input" type="number"></input>
         </div>
+        {errorMessage.isDisplay && <div className="error">{errorMessage.message}</div>}
 
-        <div className="error" ref={errorRef}>
-          Invalid input!!!
-        </div>
         <div className="button-div">
           <button onClick={checkBookInfoValid} className="save-button">
             Add

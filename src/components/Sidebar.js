@@ -18,7 +18,7 @@ export default function Sidebar() {
     <div className="side-bar">
       <Link to="/" onClick={handleRedirect}>
         <div className="side-bar-header">
-          <h3>BOOKLAND</h3>
+          <h3>BOOK STORE</h3>
         </div>
       </Link>
       <Link to="/books" onClick={handleRedirect}>
@@ -35,12 +35,14 @@ export default function Sidebar() {
           <span>Category</span>
         </div>
       </div>
-      <div className="side-bar-item">
-        <div>
-          <FontAwesomeIcon icon={faUserFriends}></FontAwesomeIcon>
-          <span>Customer</span>
+      <Link to="/customer" onClick={handleRedirect}>
+        <div className="side-bar-item">
+          <div>
+            <FontAwesomeIcon icon={faUserFriends}></FontAwesomeIcon>
+            <span>Customer</span>
+          </div>
         </div>
-      </div>
+      </Link>
       <Link to="/order" onClick={handleRedirect}>
         <div className="side-bar-item">
           <div>

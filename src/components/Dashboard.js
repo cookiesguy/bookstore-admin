@@ -3,6 +3,8 @@ import Books from "./books";
 import Login from "./Login";
 import Setting from "./settings";
 import Order from "./orders";
+import Customer from "./customer/index";
+
 export default function Dashboard() {
   return (
     <div className="dash-board">
@@ -25,6 +27,9 @@ export default function Dashboard() {
         </Route>
         <Route path="/order">
           <Order></Order>
+        </Route>
+        <Route path="/customer">
+          <Customer></Customer>
         </Route>
       </Switch>
     </div>

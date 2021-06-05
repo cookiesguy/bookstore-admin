@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataGrid } from "@material-ui/data-grid";
-
 import { useEffect, useState, useRef } from "react";
 import { faPenAlt, faPlusCircle, faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { addNewBook, deleteBook, getAllBooks, getAllCategory, upDateBook } from "../../api/book";
@@ -8,7 +7,7 @@ import * as XLSX from "xlsx";
 import EditDiaLog from "./EditBookDialog";
 import AddNewBookDialog from "./AddBookDialog";
 import DeleteDialog from "./DeleteDialog";
-import SnackBar from "./SnackBar";
+import SnackBar from "../SnackBar";
 
 export default function Books() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -18,7 +17,7 @@ export default function Books() {
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [selectedRow, setSelectedRow] = useState({});
   const [category, setCategory] = useState([]);
-  const loadingRef = useRef();
+  const [loading, setLoading] = useState(true);
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     { field: "name", headerName: "Name", width: 350 },
@@ -71,7 +70,7 @@ export default function Books() {
   }
 
   async function fetchAllBook() {
-    if (loadingRef.current !== null) loadingRef.current.style.display = "flex";
+    setLoading(true);
     const res = await getAllBooks();
     if (res !== null) {
       const rowData = [];
@@ -86,9 +85,9 @@ export default function Books() {
       }
       setRows(rowData);
       setOpenSnackBar(false);
-      loadingRef.current !== null && (loadingRef.current.style.display = "none");
+      setLoading(false);
     } else {
-      loadingRef.current.style.display = "none";
+      setLoading(false);
       setOpenSnackBar(true);
       setSnackBarMessage("Fail to get data");
     }
@@ -188,15 +187,17 @@ export default function Books() {
   return (
     <div className="data-grid">
       <div className="table">
-        <div ref={loadingRef} className="loading-row">
-          <p>Loading...</p>
-          <div className="lds-ellipsis">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+        {loading && (
+          <div className="loading-row">
+            <p>Loading...</p>
+            <div className="lds-ellipsis">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="outside-button">
           <button onClick={addBookClick} className="add-button data-grid-btn">

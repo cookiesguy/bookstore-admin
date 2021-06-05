@@ -12,15 +12,13 @@ export default function Setting() {
     MaximumDebtCustomer: true,
     MaximumAmountBookLeftAfterSelling: true,
   });
-
-  const loadingRef = useRef();
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    loadingRef.current.style.display = "flex";
+    setLoading(true);
     async function fetchData() {
       const res = await getAllConfig();
       setConfigs(res);
-      loadingRef.current.style.display = "none";
+      setLoading(false);
     }
     fetchData();
   }, []);
@@ -38,15 +36,18 @@ export default function Setting() {
 
   return (
     <div className="data-grid">
-      <div ref={loadingRef} className="setting-loading">
-        <p>Loading...</p>
-        <div className="lds-ellipsis">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+      {loading && (
+        <div className="setting-loading">
+          <p>Loading...</p>
+          <div className="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </div>
-      </div>
+      )}
+
       {configs.length > 0 ? (
         <div>
           <div className="setting-title">
