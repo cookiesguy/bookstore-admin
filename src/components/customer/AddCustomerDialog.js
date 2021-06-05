@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog } from "@material-ui/core";
-
+import { removeAscent } from "../../helper/vietnameseValidate";
 export default function AddCustomerDialog(props) {
   const [newCustomer, setNewCustomer] = useState({});
   const [errorMessage, setErrorMessage] = useState({ isDisplay: false, message: "" });
@@ -39,8 +39,8 @@ export default function AddCustomerDialog(props) {
   const checkValidAddressAndName = () => {
     const regex = /[^A-Za-z0-9]+/g;
     if (
-      regex.test(newCustomer.name) ||
-      regex.test(newCustomer.address) ||
+      regex.test(removeAscent(newCustomer.name)) ||
+      regex.test(removeAscent(newCustomer.address)) ||
       newCustomer.address === "" ||
       newCustomer.name === ""
     ) {
@@ -56,7 +56,6 @@ export default function AddCustomerDialog(props) {
       setErrorMessage({ isDisplay: false, message: "" });
       return true;
     }
-    console.log("check email");
     setErrorMessage({ isDisplay: true, message: "Invalid email address" });
   };
   const checkValidPhoneNumber = () => {

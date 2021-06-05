@@ -108,7 +108,7 @@ export default function Books() {
     setSelectedRow(el.row);
   };
 
-  const closeEditDialog = (book, newBook, isCancel) => {
+  const closeEditDialog = (newBook, isCancel) => {
     setOpenEditDialog(false);
     if (!isCancel) {
       const result = upDateBook(newBook);

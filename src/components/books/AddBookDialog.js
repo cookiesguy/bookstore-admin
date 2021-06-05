@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
 import Option from "./CategoryDialog";
+import { removeAscent } from "../../helper/vietnameseValidate";
 
 export default function AddNewBookDialog(props) {
-  const [newBook, setNewBook] = useState({ type: 1, amount: "", name: "", author: "" });
+  const [newBook, setNewBook] = useState({
+    category: {
+      id: 1,
+    },
+    amount: "",
+    name: "",
+    author: "",
+  });
   const [category, setCategory] = useState([{ name: "" }]);
   const [errorMessage, setErrorMessage] = useState({ isDisplay: false, message: "" });
 
@@ -44,7 +52,7 @@ export default function AddNewBookDialog(props) {
   const checkStringValid = str => {
     console.log("valid info");
     const regex = /[^A-Za-z0-9]+/;
-    if (regex.test(str) || str === "") {
+    if (regex.test(removeAscent(str)) || str === "") {
       setErrorMessage({ isDisplay: true, message: "Invalid book infomation" });
       return false;
     }

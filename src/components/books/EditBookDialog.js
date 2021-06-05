@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
 import Option from "./CategoryDialog";
 import { getConfigItem } from "../../api/settings";
-import { VoiceOverOffSharp } from "@material-ui/icons";
+import { removeAscent } from "../../helper/vietnameseValidate";
 
 export default function EditDiaLog(props) {
   const [editBook, setEditBook] = useState({
@@ -10,11 +10,12 @@ export default function EditDiaLog(props) {
       name: "",
     },
   });
+  const [errorMessage, setErrorMessage] = useState({ isDisplay: false, message: "" });
   const [category, setCategory] = useState([]);
   const [tempAmount, setTempAmount] = useState(0);
   const [minimumImportBook, setMinimumImportBook] = useState({});
   const [maximumBook, setMaximumBook] = useState({});
-  const errorRef = useRef();
+
   useEffect(() => {
     setCategory(props.category);
   }, [props.category]);
@@ -31,26 +32,36 @@ export default function EditDiaLog(props) {
   };
 
   const changeName = event => {
-    setEditBook(prevState => {
-      return { ...prevState, name: event.target.value };
-    });
+    if (event.target.value === "")
+      setEditBook(prevState => {
+        return { ...prevState, name: props.book.name };
+      });
+    else
+      setEditBook(prevState => {
+        return { ...prevState, name: event.target.value };
+      });
   };
   const changeAuthor = event => {
+    if (event.target.value === "") {
+      setEditBook(prevState => {
+        return { ...prevState, author: props.book.author };
+      });
+    }
     setEditBook(prevState => {
       return { ...prevState, author: event.target.value };
     });
   };
   const changeAmount = () => {
     if (tempAmount < minimumImportBook.value && tempAmount > 0 && minimumImportBook.status) {
-      errorRef.current.style.display = "block";
+      setErrorMessage({ isDisplay: true, message: "Invalid minimum import" });
       return;
     }
     let value = tempAmount + editBook.amount;
     if (value > maximumBook.value && maximumBook.status) {
-      errorRef.current.style.display = "block";
+      setErrorMessage({ isDisplay: true, message: "Invalid maximum amount" });
       return;
     }
-    errorRef.current.style.display = "none";
+    setErrorMessage({ isDisplay: false, message: "" });
     if (value < 0) {
       setEditBook(prevState => {
         return { ...prevState, amount: 1 };
@@ -69,35 +80,30 @@ export default function EditDiaLog(props) {
   const handleNumberInput = event => {
     const reg = new RegExp(/^-?[0-9]\d*(\.\d+)?$/);
     if (reg.test(event.target.value)) {
-      errorRef.current.style.display = "none";
+      setErrorMessage({ isDisplay: false, message: "" });
       setTempAmount(parseInt(event.target.value));
       return true;
     } else {
-      errorRef.current.style.display = "block";
+      setErrorMessage({ isDisplay: true, message: "Must be a number" });
       return false;
     }
   };
   const checkBookInfoValid = () => {
     if (!checkStringValid(editBook.name) || !checkStringValid(editBook.author)) {
-      errorRef.current.style.display = "block";
+      setErrorMessage({ isDisplay: true, message: "Invalid book info" });
       return false;
     } else {
-      errorRef.current.style.display = "none";
+      setErrorMessage({ isDisplay: false, message: "" });
       return true;
     }
   };
   const checkStringValid = str => {
-    for (let i = 0; i < str.length; i++) {
-      let ascii = str.charCodeAt(i);
-      if (ascii > 47 && ascii < 58) {
-        return true;
-      } else if (ascii > 47 && ascii < 91) {
-        return true;
-      } else if (ascii > 96 && ascii < 123) {
-        return true;
-      }
+    console.log("valid info");
+    const regex = /[^A-Za-z0-9]+/;
+    if (regex.test(removeAscent(str)) || str === "") {
+      return false;
     }
-    return false;
+    return true;
   };
 
   const closeDialog = isCancel => {
@@ -105,10 +111,11 @@ export default function EditDiaLog(props) {
       setEditBook(prevState => {
         return { ...prevState, amount: props.book.amount };
       });
-      props.closeEditDialog(null, null, true);
+      setErrorMessage({ isDisplay: false, message: "" });
+      props.closeEditDialog(null, true);
     } else {
       if (checkBookInfoValid()) {
-        props.closeEditDialog(null, editBook, false);
+        props.closeEditDialog(editBook, false);
       }
     }
   };
@@ -162,9 +169,7 @@ export default function EditDiaLog(props) {
           </div>
         </div>
 
-        <div ref={errorRef} className="error">
-          Invalid input, please check all condition
-        </div>
+        {errorMessage.isDisplay && <div className="error">{errorMessage.message}</div>}
         <div className="button-div">
           <button className="save-button" onClick={e => closeDialog(false)}>
             Save
