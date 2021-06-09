@@ -92,7 +92,10 @@ a {
       -ms-flex-pack: end;
           justify-content: flex-end;
   padding: 40px 100px;
-  position: fixed;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: #fff;
@@ -192,14 +195,14 @@ li span {
 }
 
 .dash-board {
-  padding-left: 230px;
-  padding-top: 150px;
+  padding-left: 220px;
+  padding-top: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding-right: 30px;
-  width: 100vw;
-  height: 100vh;
+  padding-right: 20px;
+  width: 100%;
+  height: 100%;
   padding-bottom: 30px;
 }
 
@@ -295,12 +298,17 @@ li span {
   display: flex;
   padding: 20px;
   position: relative;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .table {
   height: 400px;
   width: 100%;
   position: relative;
+  margin-bottom: 30px;
 }
 
 .dialog {
@@ -696,5 +704,127 @@ li span {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+}
+
+.select-option {
+  width: 400px;
+}
+
+.select-div {
+  margin: 30px 0px;
+}
+
+.select-div p {
+  margin-bottom: 20px;
+}
+
+.select-div button {
+  padding: 10px;
+  margin-left: 20px;
+}
+
+.select-div input {
+  padding: 10px;
+}
+
+.main-title {
+  letter-spacing: 0.1rem;
+}
+
+.order-table {
+  width: 100%;
+  height: 400px;
+  padding-top: 30px;
+  margin-top: 40px;
+  margin-left: 20px;
+  margin-bottom: 50px;
+  padding-right: 30px;
+}
+
+.order-table h4 {
+  margin-bottom: 20px;
+}
+
+.order-button {
+  padding: 10px;
+}
+
+.current-book-list {
+  height: 450px;
+  overflow: auto;
+}
+
+.book-list {
+  padding-left: 80px;
+  margin-left: 30px;
+  min-width: 400px;
+}
+
+.delele-book-button {
+  padding: 8px;
+  background-color: #921818;
+  border-color: #921818;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.add-area {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: 20px;
+}
+
+.book-item {
+  margin: 15px 0px;
+}
+
+.book-item span {
+  font-weight: bold;
+}
+
+.book-item p {
+  margin: 5px 0px;
+}
+
+.book-item button {
+  margin-top: 5px;
+}
+
+.add-bill-div button {
+  padding: 10px;
+  background: linear-gradient(45deg, #2eb85c, #169b42);
+  color: #fff;
+  border-color: green;
+  border-radius: 5px;
+}
+
+.add-bill-div button span {
+  margin-left: 10px;
+}
+
+tr th {
+  padding: 0px 10px;
+}
+
+tr td {
+  padding: 0px 10px;
+}
+
+.empty-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-left: 30px;
+  height: 100%;
+  color: rgba(128, 128, 128, 0.877);
+  font-size: 1.5rem;
+}
+
+.empty-list span {
+  margin-left: 10px;
 }
 /*# sourceMappingURL=main.css.map */

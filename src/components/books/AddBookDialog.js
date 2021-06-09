@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
 import Option from "./CategoryDialog";
 import { removeAscent } from "../../helper/vietnameseValidate";
+import { getConfigItem } from "../../api/settings";
 
 export default function AddNewBookDialog(props) {
   const [newBook, setNewBook] = useState({
@@ -12,13 +13,23 @@ export default function AddNewBookDialog(props) {
     name: "",
     author: "",
   });
+  const [minimumImport, setMininumImport] = useState({
+    value: 0,
+    status: false,
+  });
   const [category, setCategory] = useState([{ name: "" }]);
   const [errorMessage, setErrorMessage] = useState({ isDisplay: false, message: "" });
 
   useEffect(() => {
     setCategory(props.category);
   }, [props.category]);
-
+  useEffect(() => {
+    async function fetchConfig() {
+      const item = await getConfigItem("MinimumImportBook");
+      setMininumImport(item);
+    }
+    fetchConfig();
+  });
   const changeName = event => {
     setNewBook(prevState => {
       return { ...prevState, name: event.target.value };
@@ -41,14 +52,21 @@ export default function AddNewBookDialog(props) {
       return { ...prevState, category: object };
     });
   };
-  const checkBookInfoValid = () => {
-    if (!checkStringValid(newBook.name) || !checkStringValid(newBook.author) || !checkValidAmount()) {
+  const closeDialog = () => {
+    if (!checkStringValid(newBook.name) || !checkStringValid(newBook.author) || !checkAmountIsNumber() || !checkValidAmount()) {
     } else {
       setErrorMessage({ isDisplay: false, message: "" });
       props.closeAddDialog(newBook, false);
     }
   };
-
+  const checkValidAmount = () => {
+    if (parseInt(newBook.amount) < minimumImport.value) {
+      setErrorMessage({ isDisplay: true, message: "Invalid minium import amount" });
+      return false;
+    }
+    setErrorMessage({ isDisplay: false, message: "" });
+    return true;
+  };
   const checkStringValid = str => {
     console.log("valid info");
     const regex = /[^A-Za-z0-9]+/;
@@ -60,14 +78,14 @@ export default function AddNewBookDialog(props) {
     return true;
   };
 
-  const checkValidAmount = () => {
+  const checkAmountIsNumber = () => {
     console.log("valid number");
     const regex = new RegExp("^[0-9]*$");
     if (regex.test(newBook.amount) || newBook.amount !== "") {
       setErrorMessage({ isDisplay: false, message: "" });
       return true;
     } else {
-      setErrorMessage({ isDisplay: true, message: "Invalid number please check all condition" });
+      setErrorMessage({ isDisplay: true, message: "Amount must be a number" });
       return false;
     }
   };
@@ -89,6 +107,13 @@ export default function AddNewBookDialog(props) {
           <p className="input-header">Category</p>
           <Option changeCategoryId={changeCategoryId} currentCategory={category[0].name} category={category}></Option>
         </div>
+        {minimumImport.status && (
+          <div className="input-info">
+            <p className="input-header">Mininum import amount: </p>
+            <span>{minimumImport.value}</span>
+          </div>
+        )}
+
         <div className="input-info">
           <p className="input-header">Amount</p>
           <input onBlur={changeAmount} className="input" type="number"></input>
@@ -96,7 +121,7 @@ export default function AddNewBookDialog(props) {
         {errorMessage.isDisplay && <div className="error">{errorMessage.message}</div>}
 
         <div className="button-div">
-          <button onClick={checkBookInfoValid} className="save-button">
+          <button onClick={closeDialog} className="save-button">
             Add
           </button>
           <button onClick={e => props.closeAddDialog(newBook, true)} className="cancle-button">

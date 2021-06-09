@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataGrid } from "@material-ui/data-grid";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { faPenAlt, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { getAllCustomer } from "../../api/customer";
 import EditCustomerDiaLog from "./EditCustomerDialog";

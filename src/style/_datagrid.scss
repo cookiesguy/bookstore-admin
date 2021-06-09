@@ -11,12 +11,14 @@ $add-btn-color: linear-gradient(45deg, #f9b115, #f6960b);
   display: flex;
   padding: 20px;
   position: relative;
+  flex-direction: column;
 }
 
 .table {
   height: 400px;
   width: 100%;
   position: relative;
+  margin-bottom: 30px;
 }
 
 .dialog {

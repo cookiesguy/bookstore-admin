@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Dialog } from "@material-ui/core";
-
+import { removeAscent } from "../../helper/vietnameseValidate";
 export default function EditDiaLog(props) {
   const [editCustomer, setEditCustomer] = useState({});
   const [errorMessage, setErrorMessage] = useState({ isDisplay: false, message: "" });
@@ -76,8 +76,8 @@ export default function EditDiaLog(props) {
   const checkValidAddressAndName = () => {
     const regex = /[^A-Za-z0-9]+/g;
     if (
-      regex.test(editCustomer.name) ||
-      regex.test(editCustomer.address) ||
+      regex.test(removeAscent(editCustomer.name)) ||
+      regex.test(removeAscent(editCustomer.address)) ||
       editCustomer.address === "" ||
       editCustomer.name === ""
     ) {

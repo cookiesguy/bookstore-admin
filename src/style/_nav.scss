@@ -2,8 +2,9 @@
     display: flex;
     justify-content: flex-end;
     padding: 40px 100px;
-    position: fixed;
-
+    position: sticky;
+    top: 0;
+    z-index: 2;
     width: 100%;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     background-color: #fff;
