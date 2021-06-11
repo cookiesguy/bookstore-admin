@@ -38,13 +38,18 @@
     padding: 10px;
 }
 .current-book-list {
-    height: 450px;
+    height: 100%;
     overflow: auto;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.877);
 }
 .book-list {
     padding-left: 80px;
     margin-left: 30px;
     min-width: 400px;
+    height: 410px;
+    p {
+        margin-top: 10px;
+    }
 }
 .delele-book-button {
     padding: 8px;
@@ -93,9 +98,10 @@ tr {
 .empty-list {
     display: flex;
     align-items: center;
-    padding-left: 30px;
+    padding-left: 100px;
     height: 100%;
     color: rgba(128, 128, 128, 0.877);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.877);
     span {
         margin-left: 10px;
     }

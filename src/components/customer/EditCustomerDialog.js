@@ -46,14 +46,14 @@ export default function EditDiaLog(props) {
       setEditCustomer(prevState => {
         return {
           ...prevState,
-          phone: props.customer.phone,
+          phoneNumber: props.customer.phoneNumber,
         };
       });
     else
       setEditCustomer(prevState => {
         return {
           ...prevState,
-          phone: event.target.value,
+          phoneNumber: event.target.value,
         };
       });
   };
@@ -97,7 +97,7 @@ export default function EditDiaLog(props) {
   };
   const checkValidPhoneNumber = () => {
     const regex = new RegExp("^[0-9]*$");
-    if (regex.test(editCustomer.phone)) {
+    if (regex.test(editCustomer.phoneNumber)) {
       setErrorMessage({ isDisplay: false, message: "" });
       return true;
     }
@@ -126,7 +126,7 @@ export default function EditDiaLog(props) {
         </div>
         <div className="input-info">
           <p className="input-header">Phone</p>
-          <input onBlur={changePhoneNumber} className="input" placeholder={props.customer.phone}></input>
+          <input onBlur={changePhoneNumber} className="input" placeholder={props.customer.phoneNumber}></input>
         </div>
         {errorMessage.isDisplay && <div className="error">{errorMessage.message}</div>}
         <div className="button-div">

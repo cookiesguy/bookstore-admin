@@ -21,12 +21,13 @@ export default function Order() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [bills, setBill] = useState([]);
+  const [totalMoney, setTotalMoney] = useState(0);
 
   const columns = [
     { field: "id", headerName: "Bill ID", width: 150 },
     { field: "name", headerName: "Customer Name", width: 250 },
     {
-      field: "phone",
+      field: "phoneNumber",
       headerName: "Phone",
       type: "number",
       width: 150,
@@ -52,8 +53,7 @@ export default function Order() {
   ];
 
   useEffect(() => {
-    const res = getAllCustomer();
-    setCustomers(res);
+    fetchAllCustomer();
     fetchAllBook();
     fetchAllBill();
   }, []);
@@ -63,13 +63,24 @@ export default function Order() {
   useEffect(() => {
     assignBookLabel();
   }, [books]);
+  useEffect(() => {
+    let sum = 0;
+    for (const el of currentBookList) {
+      sum += el.price * el.quantity;
+    }
+    setTotalMoney(sum);
+  }, [currentBookList]);
   async function fetchAllBook() {
     const res = await getAllBooks();
     setBooks(res);
   }
+  async function fetchAllCustomer() {
+    const res = await getAllCustomer();
+    setCustomers(res);
+  }
   async function fetchAllBill() {
     const res = await getAllBill();
-    console.log(res);
+
     const temp = [];
     for (const bill of res) {
       try {
@@ -101,7 +112,7 @@ export default function Order() {
   const assignCustomerLabel = () => {
     const temp = [];
     for (const el of customers) {
-      temp.push({ ...el, label: `${el.name}, Phone: ${el.phone}` });
+      temp.push({ ...el, label: `${el.name}, Phone: ${el.phoneNumber}` });
     }
     setCustomerOption(temp);
   };
@@ -160,7 +171,8 @@ export default function Order() {
             <input defaultValue="1" onChange={changeQuantity} type="number"></input>
           </div>
           <div className="select-div">
-            <input onBlur={priceChange} className="price-input" type="number"></input>
+            <p>Price</p>
+            <input onChange={priceChange} className="price-input" type="number"></input>
 
             <button disabled={isDisableAddBook} className="order-button" onClick={addBookList}>
               Add book
@@ -185,6 +197,7 @@ export default function Order() {
               <BookList removeBook={removeBook} books={currentBookList}></BookList>
             </div>
           )}
+          <p>Total money: {totalMoney}</p>
         </div>
       </div>
       <div className="order-table">

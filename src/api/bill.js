@@ -1,7 +1,7 @@
 export async function getAllBill() {
   const res = await fetch("/api/bill");
   const data = await res.json();
-  console.log(data);
+
   return data;
 }
 

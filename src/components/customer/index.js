@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { faPenAlt, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { getAllCustomer } from "../../api/customer";
+import { addNewCustomer, getAllCustomer } from "../../api/customer";
 import EditCustomerDiaLog from "./EditCustomerDialog";
 import AddCustomerDialog from "./AddCustomerDialog";
 import DeleteDialog from "./DeleteCustomerDialog";
@@ -14,6 +14,7 @@ export default function Customer() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [loading, setLoading] = useState(true);
   const [selectedRow, setSelectedRow] = useState({});
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
@@ -24,7 +25,7 @@ export default function Customer() {
       width: 150,
     },
     {
-      field: "phone",
+      field: "phoneNumber",
       headerName: "Phone",
       width: 150,
     },
@@ -57,8 +58,11 @@ export default function Customer() {
       ),
     },
   ];
-  function fetchAllCustomer() {
-    setRows(getAllCustomer());
+  async function fetchAllCustomer() {
+    const data = await getAllCustomer();
+    setRows(data);
+    setLoading(false);
+    setOpenSnackBar(false);
   }
   useEffect(() => {
     fetchAllCustomer();
@@ -82,8 +86,20 @@ export default function Customer() {
   const addBookClick = () => {
     setOpenAddDialog(true);
   };
-  const closeAdddDialog = () => {
+  const closeAdddDialog = async (newCustomer, isCancle) => {
     setOpenAddDialog(false);
+    if (!isCancle) {
+      const res = await addNewCustomer(newCustomer);
+      if (res) {
+        setLoading(true);
+        setSnackBarMessage("Action complete loading data...");
+        setOpenSnackBar(true);
+        setTimeout(fetchAllCustomer(), 2000);
+      } else {
+        setSnackBarMessage("An occur error happen, please try later");
+        setOpenSnackBar(true);
+      }
+    }
   };
   const closeDeleteDialog = isConfirm => {
     setOpenDeleteDialog(false);
@@ -92,15 +108,17 @@ export default function Customer() {
   return (
     <div className="data-grid">
       <div className="table">
-        {/* <div ref={loadingRef} className="loading-row">
-          <p>Loading...</p>
-          <div className="lds-ellipsis">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+        {loading && (
+          <div className="loading-row">
+            <p>Loading...</p>
+            <div className="lds-ellipsis">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
           </div>
-        </div> */}
+        )}
 
         <div className="outside-button">
           <button onClick={addBookClick} className="add-button data-grid-btn">

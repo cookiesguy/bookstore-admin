@@ -1,18 +1,30 @@
-export function getAllCustomer() {
-  return [
-    {
-      id: 1,
-      name: "Vo Xuan Hoa",
-      address: "Bien Hoa",
-      phone: "934344334",
-      email: "abc@gmail.com",
+export async function getAllCustomer() {
+  const res = await fetch("api/customer");
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  } else {
+    return null;
+  }
+}
+
+export async function addNewCustomer(newCustomer) {
+  const data = {
+    Name: newCustomer.name,
+    PhoneNumber: newCustomer.phoneNumber,
+    Address: newCustomer.address,
+    Email: newCustomer.email,
+  };
+  const res = await fetch("/api/customer", {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
-    {
-      id: 2,
-      name: "Vo Thien An",
-      address: "Gia Lai",
-      phone: "566776888",
-      email: "defb@gmail.com",
-    },
-  ];
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  if (res.ok) {
+    return true;
+  }
+  return false;
 }

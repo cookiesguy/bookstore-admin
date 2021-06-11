@@ -24,7 +24,7 @@ export default function AddCustomerDialog(props) {
     setNewCustomer(prevState => {
       return {
         ...prevState,
-        phone: event.target.value,
+        phoneNumber: event.target.value,
       };
     });
   };
@@ -60,7 +60,7 @@ export default function AddCustomerDialog(props) {
   };
   const checkValidPhoneNumber = () => {
     const regex = new RegExp("^[0-9]*$");
-    if (regex.test(newCustomer.phone)) {
+    if (regex.test(newCustomer.phoneNumber)) {
       setErrorMessage({ isDisplay: false, message: "" });
       return true;
     }
@@ -96,7 +96,13 @@ export default function AddCustomerDialog(props) {
           <button className="save-button" onClick={closeDialog}>
             Add
           </button>
-          <button className="cancle-button" onClick={e => props.closeAddDialog(null, true)}>
+          <button
+            className="cancle-button"
+            onClick={e => {
+              setNewCustomer({});
+              props.closeAddDialog(null, true);
+            }}
+          >
             Cancel
           </button>
         </div>
