@@ -29,11 +29,12 @@ export default function NavigationBar() {
 
    const openSideBar = () => {
       sidebarContext.toggleSideBarVisible();
+      sidebarContext.toggleClickFromNav(true);
    };
 
    const logOutAccount = () => {
       setOpenPopup(!openPopup);
-      loginContext.changeLoginContext();
+      loginContext.changeLoginState();
    };
 
    return (

@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 import {
    faChartLine,
    faWallet,
@@ -12,17 +15,27 @@ import { useTransition } from 'context/SideBarContext';
 export default function Sidebar() {
    const sidebarContext = useTransition();
 
+   const isBigScreen = useMediaQuery({ query: '(min-width: 610px)' });
+
    const handleRedirect = () => {
       const width = document.body.clientWidth;
       if (width < 600) {
-         useTransition.toggleSideBarVisible();
+         sidebarContext.toggleSideBarVisible();
       }
    };
 
+   useEffect(() => {
+      if (isBigScreen) sidebarContext.toggleSideBarVisible();
+      else sidebarContext.toggleClickFromNav(false);
+   }, [isBigScreen]);
+
    return (
       <div
-         className={`sidebar  ${
-            sidebarContext.isVisible ? 'sidebar-visible' : 'sidebar-un-visible'
+         className={`${
+            (isBigScreen && sidebarContext.isVisible) ||
+            (sidebarContext.isClickFromNav && sidebarContext.isVisible)
+               ? 'sidebar-visible'
+               : 'sidebar-un-visible'
          }`}
       >
          <Link to="/" onClick={handleRedirect}>

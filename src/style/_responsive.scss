@@ -1,50 +1,44 @@
 @media screen and (min-width: 610px) {
-    .disable-div {
-        display: none;
-    }
-    .sidebar {
-        display: block;
-    }
+   .disable-div {
+      display: none;
+   }
 }
 @media screen and (max-width: 600px) {
-    .sidebar {
-        display: none;
-    }
-    .nav-bar {
-        padding: 40px 0px;
-        justify-content: center;
-    }
-    .title {
-        display: flex;
-        margin-right: 20px;
-    }
+   .nav-bar {
+      padding: 40px 0px;
+      justify-content: center;
+   }
+   .title {
+      display: flex;
+      margin-right: 20px;
+   }
 
-    li {
-        padding: 0px 20px;
-    }
-    .dash-board {
-        padding-left: 30px;
-    }
+   li {
+      padding: 0px 20px;
+   }
+   .dash-board {
+      padding-left: 30px;
+   }
 }
 @media screen and (max-width: 440px) {
-    .narrow-down {
-        display: flex;
-    }
-    ul {
-        display: none;
-    }
+   .narrow-down {
+      display: flex;
+   }
+   ul {
+      display: none;
+   }
 
-    .title {
-        display: flex;
-        margin-right: 30px;
-        justify-content: space-between;
-        width: 200px;
-    }
-    .pop-up-account {
-        right: 20px;
-    }
-    .config-item {
-        margin: 20px 0px;
-        font-size: 0.9rem;
-    }
+   .title {
+      display: flex;
+      margin-right: 30px;
+      justify-content: space-between;
+      width: 200px;
+   }
+   .pop-up-account {
+      right: 20px;
+   }
+   .config-item {
+      margin: 20px 0px;
+      font-size: 0.9rem;
+   }
 }

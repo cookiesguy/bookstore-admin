@@ -6,12 +6,12 @@ import App from './App';
 import LoginProvider from 'context/LoginContext';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <React.StrictMode>
-      <LoginProvider>
-        <App />
-      </LoginProvider>
-    </React.StrictMode>
-  </BrowserRouter>,
-  document.getElementById('root')
+   <BrowserRouter>
+      <React.StrictMode>
+         <LoginProvider>
+            <App />
+         </LoginProvider>
+      </React.StrictMode>
+   </BrowserRouter>,
+   document.getElementById('root')
 );

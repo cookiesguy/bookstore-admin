@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Dialog } from '@material-ui/core';
-import { validateEmail, validateString } from 'helper/validate';
+import {
+   validateEmail,
+   validateString,
+   validatePhoneNumber,
+} from 'helper/validate';
 
 export default function EditDiaLog(props) {
    const [editCustomer, setEditCustomer] = useState({});
@@ -82,14 +86,14 @@ export default function EditDiaLog(props) {
          validateString(editCustomer.name) ||
          validateString(editCustomer.address)
       ) {
-         setErrorMessage({
-            isDisplay: true,
-            message: 'Invalid name or address',
-         });
-         return false;
+         setErrorMessage({ isDisplay: false, message: '' });
+         return true;
       }
-      setErrorMessage({ isDisplay: false, message: '' });
-      return true;
+      setErrorMessage({
+         isDisplay: true,
+         message: 'Invalid name or address',
+      });
+      return false;
    };
 
    const checkValidEmail = () => {
@@ -101,8 +105,7 @@ export default function EditDiaLog(props) {
    };
 
    const checkValidPhoneNumber = () => {
-      const regex = new RegExp('^[0-9]*$');
-      if (regex.test(editCustomer.phoneNumber)) {
+      if (validatePhoneNumber(editCustomer.phoneNumber)) {
          setErrorMessage({ isDisplay: false, message: '' });
          return true;
       }

@@ -2,7 +2,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Dialog, Button } from '@material-ui/core';
 import { useState } from 'react';
 import { useLogin } from 'context/LoginContext';
-import { userLogin } from 'api/login';
+import { userLogin } from 'api/authen';
 import Books from './books';
 import Setting from './settings';
 import Order from './orders';
@@ -39,7 +39,7 @@ export default function Dashboard() {
 
    return (
       <div className="dash-board">
-         {loginContext.login ? (
+         {loginContext.login === true ? (
             <Switch>
                <Route exact path="/">
                   <div className="access">

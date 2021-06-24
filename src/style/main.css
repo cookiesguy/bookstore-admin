@@ -1,5 +1,5 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
@@ -33,13 +33,33 @@ a {
 }
 
 .sidebar-visible {
+  width: 200px;
+  height: 100vh;
+  background-color: #3c4b64;
+  position: fixed;
+  top: 0;
+  z-index: 2;
   -webkit-transform: translateX(0px);
           transform: translateX(0px);
+  -webkit-transition: -webkit-transform 0.6s ease;
+  transition: -webkit-transform 0.6s ease;
+  transition: transform 0.6s ease;
+  transition: transform 0.6s ease, -webkit-transform 0.6s ease;
 }
 
 .sidebar-un-visible {
+  width: 200px;
+  height: 100vh;
+  background-color: #3c4b64;
+  position: fixed;
+  top: 0;
+  z-index: 2;
   -webkit-transform: translateX(-400px);
           transform: translateX(-400px);
+  -webkit-transition: -webkit-transform 0.6s ease;
+  transition: -webkit-transform 0.6s ease;
+  transition: transform 0.6s ease;
+  transition: transform 0.6s ease, -webkit-transform 0.6s ease;
 }
 
 .disable-div {
@@ -214,7 +234,7 @@ li span {
   display: flex;
   padding-right: 20px;
   width: 100%;
-  height: 100%;
+  height: 600px;
   padding-bottom: 30px;
 }
 
@@ -239,15 +259,9 @@ li span {
   .disable-div {
     display: none;
   }
-  .sidebar {
-    display: block;
-  }
 }
 
 @media screen and (max-width: 600px) {
-  .sidebar {
-    display: none;
-  }
   .nav-bar {
     padding: 40px 0px;
     -webkit-box-pack: center;
@@ -432,7 +446,7 @@ li span {
 }
 
 .MuiDataGrid-root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .outside-button {
@@ -459,7 +473,7 @@ li span {
 .loading-row {
   position: absolute;
   width: 100%;
-  height: 90%;
+  height: 80%;
   top: 120px;
   background-color: #fff;
   z-index: 1;

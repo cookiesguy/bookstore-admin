@@ -8,9 +8,8 @@ export function validateString(str) {
    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
    str = str.replace(/đ/g, 'd');
-   const regex = /[^A-Za-z0-9]+/;
 
-   return regex.test(str) || str !== '';
+   return /\S/.test(str);
 }
 
 export function validateNumber(number) {
@@ -21,10 +20,12 @@ export function validateNumber(number) {
 export function validateEmail(email) {
    const regex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/;
+
    return regex.test(email);
 }
 
 export function validatePhoneNumber(phone) {
-   const regex = new RegExp('^[0-9]*$');
-   return regex.test(phone);
+   const regex = new RegExp(/^[0-9]*$/);
+
+   return regex.test(phone) && phone.length === 10;
 }

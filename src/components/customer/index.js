@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@material-ui/data-grid';
 import {
@@ -12,7 +12,7 @@ import EditCustomerDiaLog from './EditCustomerDialog';
 import AddCustomerDialog from './AddCustomerDialog';
 import DeleteDialog from './DeleteCustomerDialog';
 
-export default function Customer() {
+function Customer() {
    const [openEditDialog, setOpenEditDialog] = useState(false);
 
    const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -180,3 +180,5 @@ export default function Customer() {
       </div>
    );
 }
+
+export default memo(Customer);

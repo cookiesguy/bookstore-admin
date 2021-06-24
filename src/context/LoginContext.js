@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { isUndefined } from 'lodash';
 
 const LoginContext = React.createContext();
 
@@ -11,7 +12,17 @@ export default function LoginProvider({ children }) {
 
    const changeLoginState = () => {
       setLogin(!login);
+      localStorage.setItem('isLogin', !login);
    };
+
+   useEffect(() => {
+      const isLogin = localStorage.getItem('isLogin');
+      console.log(isLogin);
+      if (!isUndefined(isLogin)) {
+         setLogin(Boolean(isLogin));
+      } else localStorage.setItem('isLogin', isLogin);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
 
    return (
       <LoginContext.Provider

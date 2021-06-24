@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import Select from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,7 +13,7 @@ import { getAllBooks } from 'api/book';
 import { deleteBillApi, getAllBill } from 'api/bill';
 import DeleteDialog from './DeleteDialog';
 
-export default function Order() {
+function Order() {
    const [customers, setCustomers] = useState([]);
 
    const [customerOption, setCustomerOption] = useState([]);
@@ -295,3 +295,5 @@ function BookList(props) {
 
    return content;
 }
+
+export default memo(Order);

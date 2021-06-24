@@ -8,15 +8,23 @@ export function useTransition() {
 
 export default function SideBarProvider({ children }) {
    const [isVisible, setIsVisible] = useState(true);
-
+   const [isClickFromNav, setIsClickFromNav] = useState(false);
    const toggleSideBarVisible = () => {
       setIsVisible(!isVisible);
+   };
+   const toggleClickFromNav = value => {
+      setIsClickFromNav(value);
    };
 
    return (
       <SideBarContext.Provider
          displayName="sidebar"
-         value={{ isVisible, toggleSideBarVisible }}
+         value={{
+            isVisible,
+            toggleSideBarVisible,
+            isClickFromNav,
+            toggleClickFromNav,
+         }}
       >
          {children}
       </SideBarContext.Provider>
