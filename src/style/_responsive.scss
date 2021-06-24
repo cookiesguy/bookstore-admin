@@ -1,14 +1,14 @@
 @media screen and (min-width: 610px) {
-    .side-bar {
-        transform: translateX(0px) !important;
-    }
     .disable-div {
-        display: none !important;
+        display: none;
+    }
+    .sidebar {
+        display: block;
     }
 }
 @media screen and (max-width: 600px) {
-    .side-bar {
-        transform: translateX(-400px);
+    .sidebar {
+        display: none;
     }
     .nav-bar {
         padding: 40px 0px;

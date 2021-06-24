@@ -18,8 +18,7 @@ a {
   text-decoration: none;
   color: white;
 }
-
-.side-bar {
+.sidebar {
   width: 200px;
   height: 100vh;
   background-color: #3c4b64;
@@ -27,6 +26,12 @@ a {
   top: 0;
   z-index: 2;
   transition: transform 0.6s ease;
+}
+.sidebar-visible {
+  transform: translateX(0px);
+}
+.sidebar-un-visible {
+  transform: translateX(-400px);
 }
 .disable-div {
   width: 100%;
@@ -70,3 +75,4 @@ a {
 @import "./datagrid";
 @import "./settings";
 @import "./order";
+@import "./login";

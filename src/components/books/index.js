@@ -1,46 +1,56 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DataGrid } from "@material-ui/data-grid";
-import { useEffect, useState } from "react";
-import { faPenAlt, faPlusCircle, faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
-import { addNewBook, deleteBook, getAllBooks, getAllCategory, upDateBook } from "../../api/book";
-import * as XLSX from "xlsx";
-import EditDiaLog from "./EditBookDialog";
-import AddNewBookDialog from "./AddBookDialog";
-import DeleteDialog from "./DeleteDialog";
-import SnackBar from "../SnackBar";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { DataGrid } from '@material-ui/data-grid';
+import { useEffect, useState } from 'react';
+import {
+  faPenAlt,
+  faPlusCircle,
+  faTrash,
+  faUpload,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  addNewBook,
+  deleteBook,
+  getAllBooks,
+  getAllCategory,
+  upDateBook,
+} from '../../api/book';
+import EditDiaLog from './EditBookDialog';
+import AddNewBookDialog from './AddBookDialog';
+import DeleteDialog from './DeleteDialog';
+import SnackBar from 'components/common/SnackBar';
 
 export default function Books() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openSnackBar, setOpenSnackBar] = useState(false);
-  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarMessage, setSnackBarMessage] = useState('');
   const [selectedRow, setSelectedRow] = useState({});
   const [category, setCategory] = useState([]);
   const [loading, setLoading] = useState(true);
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
-    { field: "name", headerName: "Name", width: 350 },
+    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'name', headerName: 'Name', width: 350 },
     {
-      field: "category",
-      headerName: "Category",
+      field: 'category',
+      headerName: 'Category',
       width: 150,
       renderCell: params => <span>{params.value.name}</span>,
     },
     {
-      field: "author",
-      headerName: "Author",
+      field: 'author',
+      headerName: 'Author',
       width: 150,
     },
     {
-      field: "amount",
-      headerName: "Amount",
-      type: "number",
+      field: 'amount',
+      headerName: 'Amount',
+      type: 'number',
       width: 150,
     },
     {
-      field: "edit",
-      headerName: "Edit",
+      field: 'edit',
+      headerName: 'Edit',
       width: 110,
       renderCell: params => (
         <button className="data-grid-btn edit-btn" onClick={editButtonClick}>
@@ -50,11 +60,14 @@ export default function Books() {
       ),
     },
     {
-      field: "delete",
-      headerName: "Delete",
+      field: 'delete',
+      headerName: 'Delete',
       width: 130,
       renderCell: params => (
-        <button className="data-grid-btn delete-btn" onClick={deleteButtonClick}>
+        <button
+          className="data-grid-btn delete-btn"
+          onClick={deleteButtonClick}
+        >
           <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
           <span>Delete</span>
         </button>
@@ -89,7 +102,7 @@ export default function Books() {
     } else {
       setLoading(false);
       setOpenSnackBar(true);
-      setSnackBarMessage("Fail to get data");
+      setSnackBarMessage('Fail to get data');
     }
   }
   useEffect(() => {
@@ -114,7 +127,7 @@ export default function Books() {
       const result = upDateBook(newBook);
       if (result) {
         setOpenSnackBar(true);
-        setSnackBarMessage("Action completed loading data...");
+        setSnackBarMessage('Action completed loading data...');
         setTimeout(fetchAllBook, 2000);
       }
     }
@@ -129,7 +142,7 @@ export default function Books() {
       const result = addNewBook(newBook);
       if (result) {
         setOpenSnackBar(true);
-        setSnackBarMessage("Action completed loading data...");
+        setSnackBarMessage('Action completed loading data...');
         setTimeout(fetchAllBook, 2000);
       }
     }
@@ -140,50 +153,50 @@ export default function Books() {
       const result = deleteBook(selectedRow.id);
       if (result) {
         setOpenSnackBar(true);
-        setSnackBarMessage("Action completed loading data...");
+        setSnackBarMessage('Action completed loading data...');
         setTimeout(fetchAllBook, 2000);
       }
     }
   };
-  const hanldeFileSubmit = e => {
-    e.preventDefault();
-    console.log(e.target.files[0]);
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = evt => {
-      // evt = on_file_select event
-      /* Parse data */
-      const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, { type: "binary" });
-      /* Get first worksheet */
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-      /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+  const handleFileSubmit = e => {};
+  //   e.preventDefault();
+  //   console.log(e.target.files[0]);
+  //   const file = e.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.onload = evt => {
+  //     // evt = on_file_select event
+  //     /* Parse data */
+  //     const bstr = evt.target.result;
+  //     const wb = XLSX.read(bstr, { type: 'binary' });
+  //     /* Get first worksheet */
+  //     const wsname = wb.SheetNames[0];
+  //     const ws = wb.Sheets[wsname];
+  //     /* Convert array of arrays */
+  //     const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
 
-      console.log("Data>>>" + data); // shows that excel data is read
-      console.log(convertToJson(data)); // shows data in json format
-    };
-    reader.readAsBinaryString(file);
-  };
-  const convertToJson = csv => {
-    const lines = csv.split("\n");
+  //     console.log('Data>>>' + data); // shows that excel data is read
+  //     console.log(convertToJson(data)); // shows data in json format
+  //   };
+  //   reader.readAsBinaryString(file);
+  // };
+  // const convertToJson = csv => {
+  //   const lines = csv.split('\n');
 
-    const result = [];
+  //   const result = [];
 
-    const headers = lines[0].split(",");
+  //   const headers = lines[0].split(',');
 
-    for (let i = 1; i < lines.length; i++) {
-      let obj = {};
-      let currentline = lines[i].split(",");
+  //   for (let i = 1; i < lines.length; i++) {
+  //     let obj = {};
+  //     let currentLine = lines[i].split(',');
 
-      for (let j = 0; j < headers.length; j++) {
-        obj[headers[j]] = currentline[j];
-      }
-      result.push(obj);
-    }
-    return JSON.stringify(result);
-  };
+  //     for (let j = 0; j < headers.length; j++) {
+  //       obj[headers[j]] = currentLine[j];
+  //     }
+  //     result.push(obj);
+  //   }
+  //   return JSON.stringify(result);
+  // };
   return (
     <div className="data-grid">
       <div className="table">
@@ -207,11 +220,11 @@ export default function Books() {
           <button className="import-button data-grid-btn">
             <input
               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              onChange={hanldeFileSubmit}
+              onChange={handleFileSubmit}
               type="file"
               name="file"
               id="file"
-              className="inputfile"
+              className="inputFile"
             />
             <label htmlFor="file">
               <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
@@ -219,7 +232,12 @@ export default function Books() {
             </label>
           </button>
         </div>
-        <DataGrid onCellClick={handleCellClick} rows={rows} columns={columns} pageSize={5} />
+        <DataGrid
+          onCellClick={handleCellClick}
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+        />
       </div>
       <EditDiaLog
         openEditDialog={openEditDialog}
@@ -227,9 +245,19 @@ export default function Books() {
         closeEditDialog={closeEditDialog}
         category={category}
       ></EditDiaLog>
-      <AddNewBookDialog openAddDialog={openAddDialog} closeAddDialog={closeAdddDialog} category={category}></AddNewBookDialog>
-      <DeleteDialog closeDeleteDialog={closeDeleteDialog} openDeleteDialog={openDeleteDialog}></DeleteDialog>
-      <SnackBar openSnackBar={openSnackBar} message={snackBarMessage}></SnackBar>
+      <AddNewBookDialog
+        openAddDialog={openAddDialog}
+        closeAddDialog={closeAdddDialog}
+        category={category}
+      ></AddNewBookDialog>
+      <DeleteDialog
+        closeDeleteDialog={closeDeleteDialog}
+        openDeleteDialog={openDeleteDialog}
+      ></DeleteDialog>
+      <SnackBar
+        openSnackBar={openSnackBar}
+        message={snackBarMessage}
+      ></SnackBar>
     </div>
   );
 }

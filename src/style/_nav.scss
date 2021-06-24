@@ -47,8 +47,8 @@ li {
     justify-content: center;
     border-radius: 10px;
     flex-direction: column;
-    display: none;
-    z-index: 2;
+    display: flex;
+    z-index: 3;
     p {
         padding: 10px 0px;
         svg {

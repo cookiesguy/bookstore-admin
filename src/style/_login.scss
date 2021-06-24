@@ -1,0 +1,16 @@
+.login-dialog {
+   padding: 20px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+.input-credential {
+   display: flex;
+   flex-direction: column;
+   input {
+      padding: 10px;
+   }
+   height: 250px;
+   justify-content: space-evenly;
+   width: 300px;
+}

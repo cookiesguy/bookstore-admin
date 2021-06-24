@@ -20,6 +20,7 @@
 }
 .main-title {
     letter-spacing: 0.1rem;
+    margin-bottom: 15px;
 }
 .order-table {
     width: 100%;
@@ -41,17 +42,18 @@
     height: 100%;
     overflow: auto;
     border-bottom: 1px solid rgba(128, 128, 128, 0.877);
+    padding-bottom: 15px;
 }
 .book-list {
     padding-left: 80px;
     margin-left: 30px;
     min-width: 400px;
-    height: 410px;
+    height: 455px;
     p {
         margin-top: 10px;
     }
 }
-.delele-book-button {
+.delete-book-button {
     padding: 8px;
     background-color: $red-color;
     border-color: $red-color;

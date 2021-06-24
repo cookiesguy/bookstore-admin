@@ -19,7 +19,7 @@ a {
   color: white;
 }
 
-.side-bar {
+.sidebar {
   width: 200px;
   height: 100vh;
   background-color: #3c4b64;
@@ -30,6 +30,16 @@ a {
   transition: -webkit-transform 0.6s ease;
   transition: transform 0.6s ease;
   transition: transform 0.6s ease, -webkit-transform 0.6s ease;
+}
+
+.sidebar-visible {
+  -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+}
+
+.sidebar-un-visible {
+  -webkit-transform: translateX(-400px);
+          transform: translateX(-400px);
 }
 
 .disable-div {
@@ -156,8 +166,10 @@ li span {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  display: none;
-  z-index: 2;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  z-index: 3;
 }
 
 .pop-up-account p {
@@ -224,19 +236,17 @@ li span {
 }
 
 @media screen and (min-width: 610px) {
-  .side-bar {
-    -webkit-transform: translateX(0px) !important;
-            transform: translateX(0px) !important;
-  }
   .disable-div {
-    display: none !important;
+    display: none;
+  }
+  .sidebar {
+    display: block;
   }
 }
 
 @media screen and (max-width: 600px) {
-  .side-bar {
-    -webkit-transform: translateX(-400px);
-            transform: translateX(-400px);
+  .sidebar {
+    display: none;
   }
   .nav-bar {
     padding: 40px 0px;
@@ -367,7 +377,7 @@ li span {
   border-color: #169b42;
 }
 
-.cancle-button {
+.cancel-button {
   background-color: #921818;
   border-radius: 5px;
   padding: 10px;
@@ -510,7 +520,7 @@ li span {
           animation: lds-ellipsis3 0.6s infinite;
 }
 
-.inputfile {
+.inputFile {
   width: 0.1px;
   height: 0.1px;
   opacity: 0;
@@ -519,7 +529,7 @@ li span {
   z-index: -1;
 }
 
-.inputfile + label {
+.inputFile + label {
   width: 150px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -729,6 +739,7 @@ li span {
 
 .main-title {
   letter-spacing: 0.1rem;
+  margin-bottom: 15px;
 }
 
 .order-table {
@@ -753,20 +764,21 @@ li span {
   height: 100%;
   overflow: auto;
   border-bottom: 1px solid rgba(128, 128, 128, 0.877);
+  padding-bottom: 15px;
 }
 
 .book-list {
   padding-left: 80px;
   margin-left: 30px;
   min-width: 400px;
-  height: 410px;
+  height: 455px;
 }
 
 .book-list p {
   margin-top: 10px;
 }
 
-.delele-book-button {
+.delete-book-button {
   padding: 8px;
   background-color: #921818;
   border-color: #921818;
@@ -833,5 +845,38 @@ tr td {
 
 .empty-list span {
   margin-left: 10px;
+}
+
+.login-dialog {
+  padding: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.input-credential {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 250px;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  width: 300px;
+}
+
+.input-credential input {
+  padding: 10px;
 }
 /*# sourceMappingURL=main.css.map */

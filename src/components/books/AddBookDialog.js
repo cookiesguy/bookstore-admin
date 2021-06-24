@@ -1,32 +1,35 @@
-import { useState, useEffect } from "react";
-import { Dialog } from "@material-ui/core";
-import Option from "./CategoryDialog";
-import { removeAscent } from "../../helper/vietnameseValidate";
-import { getConfigItem } from "../../api/settings";
+import { useState, useEffect } from 'react';
+import { Dialog } from '@material-ui/core';
+import Option from './CategoryDialog';
+import { validateString, validateNumber } from 'helper/validate';
+import { getConfigItem } from 'api/settings';
 
 export default function AddNewBookDialog(props) {
   const [newBook, setNewBook] = useState({
     category: {
       id: 1,
     },
-    amount: "",
-    name: "",
-    author: "",
+    amount: '',
+    name: '',
+    author: '',
   });
-  const [minimumImport, setMininumImport] = useState({
+  const [minimumImport, setMinimumImport] = useState({
     value: 0,
     status: false,
   });
-  const [category, setCategory] = useState([{ name: "" }]);
-  const [errorMessage, setErrorMessage] = useState({ isDisplay: false, message: "" });
+  const [category, setCategory] = useState([{ name: '' }]);
+  const [errorMessage, setErrorMessage] = useState({
+    isDisplay: false,
+    message: '',
+  });
 
   useEffect(() => {
     setCategory(props.category);
   }, [props.category]);
   useEffect(() => {
     async function fetchConfig() {
-      const item = await getConfigItem("MinimumImportBook");
-      setMininumImport(item);
+      const item = await getConfigItem('MinimumImportBook');
+      setMinimumImport(item);
     }
     fetchConfig();
   });
@@ -53,39 +56,43 @@ export default function AddNewBookDialog(props) {
     });
   };
   const closeDialog = () => {
-    if (!checkStringValid(newBook.name) || !checkStringValid(newBook.author) || !checkAmountIsNumber() || !checkValidAmount()) {
+    if (
+      !checkStringValid(newBook.name) ||
+      !checkStringValid(newBook.author) ||
+      !checkAmountIsNumber() ||
+      !checkValidAmount()
+    ) {
     } else {
-      setErrorMessage({ isDisplay: false, message: "" });
+      setErrorMessage({ isDisplay: false, message: '' });
       props.closeAddDialog(newBook, false);
     }
   };
   const checkValidAmount = () => {
     if (parseInt(newBook.amount) < minimumImport.value) {
-      setErrorMessage({ isDisplay: true, message: "Invalid minium import amount" });
+      setErrorMessage({
+        isDisplay: true,
+        message: 'Invalid minium import amount',
+      });
       return false;
     }
-    setErrorMessage({ isDisplay: false, message: "" });
+    setErrorMessage({ isDisplay: false, message: '' });
     return true;
   };
   const checkStringValid = str => {
-    console.log("valid info");
-    const regex = /[^A-Za-z0-9]+/;
-    if (regex.test(removeAscent(str)) || str === "") {
-      setErrorMessage({ isDisplay: true, message: "Invalid book infomation" });
+    if (validateString(str)) {
+      setErrorMessage({ isDisplay: true, message: 'Invalid book information' });
       return false;
     }
-    setErrorMessage({ isDisplay: false, message: "" });
+    setErrorMessage({ isDisplay: false, message: '' });
     return true;
   };
 
   const checkAmountIsNumber = () => {
-    console.log("valid number");
-    const regex = new RegExp("^[0-9]*$");
-    if (regex.test(newBook.amount) || newBook.amount !== "") {
-      setErrorMessage({ isDisplay: false, message: "" });
+    if (validateNumber(newBook.amount)) {
+      setErrorMessage({ isDisplay: false, message: '' });
       return true;
     } else {
-      setErrorMessage({ isDisplay: true, message: "Amount must be a number" });
+      setErrorMessage({ isDisplay: true, message: 'Amount must be a number' });
       return false;
     }
   };
@@ -105,11 +112,15 @@ export default function AddNewBookDialog(props) {
         </div>
         <div className="input-info">
           <p className="input-header">Category</p>
-          <Option changeCategoryId={changeCategoryId} currentCategory={category[0].name} category={category}></Option>
+          <Option
+            changeCategoryId={changeCategoryId}
+            currentCategory={category[0].name}
+            category={category}
+          ></Option>
         </div>
         {minimumImport.status && (
           <div className="input-info">
-            <p className="input-header">Mininum import amount: </p>
+            <p className="input-header">Minimum import amount: </p>
             <span>{minimumImport.value}</span>
           </div>
         )}
@@ -118,13 +129,18 @@ export default function AddNewBookDialog(props) {
           <p className="input-header">Amount</p>
           <input onBlur={changeAmount} className="input" type="number"></input>
         </div>
-        {errorMessage.isDisplay && <div className="error">{errorMessage.message}</div>}
+        {errorMessage.isDisplay && (
+          <div className="error">{errorMessage.message}</div>
+        )}
 
         <div className="button-div">
           <button onClick={closeDialog} className="save-button">
             Add
           </button>
-          <button onClick={e => props.closeAddDialog(newBook, true)} className="cancle-button">
+          <button
+            onClick={e => props.closeAddDialog(newBook, true)}
+            className="cancel-button"
+          >
             Cancel
           </button>
         </div>
