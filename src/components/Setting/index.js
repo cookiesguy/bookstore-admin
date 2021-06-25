@@ -4,6 +4,7 @@ import Switch from '@material-ui/core/Switch';
 import { getAllConfig, toggleConfig } from '../../api/settings';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
+import SnackBar from 'components/Common/SnackBar';
 
 export default function Setting() {
    const [configs, setConfigs] = useState([]);
@@ -113,7 +114,10 @@ export default function Setting() {
                </div>
             </div>
          ) : (
-            <div></div>
+            <SnackBar
+               openSnackBar={true}
+               message="Cant get data, network error"
+            ></SnackBar>
          )}
       </div>
    );

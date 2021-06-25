@@ -17,7 +17,6 @@ export default function LoginProvider({ children }) {
 
    useEffect(() => {
       const isLogin = localStorage.getItem('isLogin');
-      console.log(isLogin);
       if (!isUndefined(isLogin)) {
          setLogin(Boolean(isLogin));
       } else localStorage.setItem('isLogin', isLogin);

@@ -7,6 +7,7 @@ import Books from 'components/Book';
 import Setting from 'components/Setting';
 import Order from 'components/Order';
 import Customer from 'components/Customer';
+import NotFound from 'components/Layout/NotFound';
 
 export default function Dashboard() {
    const [username, setUserName] = useState('');
@@ -59,6 +60,9 @@ export default function Dashboard() {
                </Route>
                <Route path="/customer">
                   <Customer></Customer>
+               </Route>
+               <Route>
+                  <NotFound></NotFound>
                </Route>
             </Switch>
          ) : (

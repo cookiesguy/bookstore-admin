@@ -2,23 +2,17 @@
 import { useEffect, useState, memo } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import Select from 'react-select';
+import { isNull } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-   faPlusCircle,
-   faTimesCircle,
-   faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { getAllCustomer } from 'api/customer';
 import { getAllBooks } from 'api/book';
 import { deleteBillApi, getAllBill } from 'api/bill';
 import DeleteDialog from './DeleteDialog';
+import SnackBar from 'components/Common/SnackBar';
 
 function Order() {
-   const [customers, setCustomers] = useState([]);
-
    const [customerOption, setCustomerOption] = useState([]);
-
-   const [books, setBooks] = useState([]);
 
    const [bookOption, setBookOption] = useState([]);
 
@@ -31,6 +25,8 @@ function Order() {
    const [selectedCustomer, setSelectedCustomer] = useState({});
 
    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+   const [openSnackBar, setOpenSnackBar] = useState(false);
 
    const [selectedRow, setSelectedRow] = useState({});
 
@@ -69,17 +65,28 @@ function Order() {
 
    async function fetchAllBook() {
       const res = await getAllBooks();
-      setBooks(res);
+      if (isNull(res)) {
+         setOpenSnackBar(true);
+         return;
+      }
+      assignBookLabel(res);
    }
 
    async function fetchAllCustomer() {
       const res = await getAllCustomer();
-      setCustomers(res);
+      if (isNull(res)) {
+         setOpenSnackBar(true);
+         return;
+      }
+      assignCustomerLabel(res);
    }
 
    async function fetchAllBill() {
       const res = await getAllBill();
-
+      if (isNull(res)) {
+         setOpenSnackBar(true);
+         return;
+      }
       const temp = [];
       for (const bill of res) {
          try {
@@ -112,7 +119,7 @@ function Order() {
       setSelectedBook({ ...selectedBook, info: event });
    };
 
-   const assignCustomerLabel = () => {
+   const assignCustomerLabel = customers => {
       const temp = [];
       for (const el of customers) {
          temp.push({ ...el, label: `${el.name}, Phone: ${el.phoneNumber}` });
@@ -120,7 +127,7 @@ function Order() {
       setCustomerOption(temp);
    };
 
-   const assignBookLabel = () => {
+   const assignBookLabel = books => {
       const temp = [];
       for (const el of books) {
          temp.push({ ...el, label: el.title });
@@ -168,14 +175,6 @@ function Order() {
       fetchAllBook();
       fetchAllBill();
    }, []);
-
-   useEffect(() => {
-      assignCustomerLabel();
-   }, [customers]);
-
-   useEffect(() => {
-      assignBookLabel();
-   }, [books]);
 
    useEffect(() => {
       let sum = 0;
@@ -241,7 +240,6 @@ function Order() {
                <h4 className="main-title">CURRENT BOOKS IN BILL</h4>
                {currentBookList.length < 1 ? (
                   <div className="empty-list">
-                     <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
                      <span>Empty</span>
                   </div>
                ) : (
@@ -267,6 +265,10 @@ function Order() {
             closeDeleteDialog={closeDeleteDialog}
             openDeleteDialog={openDeleteDialog}
          ></DeleteDialog>
+         <SnackBar
+            openSnackBar={openSnackBar}
+            message="Fail to get data"
+         ></SnackBar>
       </div>
    );
 }
@@ -286,7 +288,7 @@ function BookList(props) {
          </p>
          <button
             onClick={e => props.removeBook(el.info.title)}
-            className="delele-book-button"
+            className="delete-book-button"
          >
             Delete
          </button>

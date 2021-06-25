@@ -3,10 +3,21 @@
       display: none;
    }
 }
+@media screen and (max-width: 1200px) {
+   .add-area {
+      flex-direction: column;
+   }
+   .book-list {
+      margin: 20px 0px !important;
+   }
+}
 @media screen and (max-width: 600px) {
    .nav-bar {
       padding: 40px 0px;
       justify-content: center;
+   }
+   .pop-up-account {
+      right: 10px;
    }
    .title {
       display: flex;

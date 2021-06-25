@@ -6,7 +6,11 @@ import {
    validatePhoneNumber,
 } from 'Helper/validate';
 
-export default function EditDiaLog(props) {
+export default function EditDiaLog({
+   openEditDialog,
+   closeEditDialog,
+   customer,
+}) {
    const [editCustomer, setEditCustomer] = useState({});
    const [errorMessage, setErrorMessage] = useState({
       isDisplay: false,
@@ -18,7 +22,7 @@ export default function EditDiaLog(props) {
          setEditCustomer(prevState => {
             return {
                ...prevState,
-               address: props.customer.address,
+               address: customer.address,
             };
          });
       else
@@ -35,7 +39,7 @@ export default function EditDiaLog(props) {
          setEditCustomer(prevState => {
             return {
                ...prevState,
-               name: props.customer.name,
+               name: customer.name,
             };
          });
       else
@@ -52,7 +56,7 @@ export default function EditDiaLog(props) {
          setEditCustomer(prevState => {
             return {
                ...prevState,
-               phoneNumber: props.customer.phoneNumber,
+               phoneNumber: customer.phoneNumber,
             };
          });
       else
@@ -69,7 +73,7 @@ export default function EditDiaLog(props) {
          setEditCustomer(prevState => {
             return {
                ...prevState,
-               email: props.customer.email,
+               email: customer.email,
             };
          });
       else
@@ -118,16 +122,16 @@ export default function EditDiaLog(props) {
          checkValidPhoneNumber() &&
          checkValidAddressAndName()
       ) {
-         props.closeEditDialog(editCustomer, false);
+         closeEditDialog(editCustomer, false);
       }
    };
 
    useEffect(() => {
-      setEditCustomer(props.customer);
-   }, [props.customer]);
+      setEditCustomer(customer);
+   }, [customer]);
 
    return (
-      <Dialog open={props.openEditDialog}>
+      <Dialog open={openEditDialog}>
          <div className="dialog">
             <h3>Edit customer information</h3>
             <div className="input-info">
@@ -135,7 +139,7 @@ export default function EditDiaLog(props) {
                <input
                   onBlur={changeName}
                   className="input"
-                  placeholder={props.customer.name}
+                  placeholder={customer.name}
                ></input>
             </div>
             <div className="input-info">
@@ -143,7 +147,7 @@ export default function EditDiaLog(props) {
                <input
                   onBlur={changeAddress}
                   className="input"
-                  placeholder={props.customer.address}
+                  placeholder={customer.address}
                ></input>
             </div>
             <div className="input-info">
@@ -151,7 +155,7 @@ export default function EditDiaLog(props) {
                <input
                   onBlur={changeEmail}
                   className="input"
-                  placeholder={props.customer.email}
+                  placeholder={customer.email}
                ></input>
             </div>
             <div className="input-info">
@@ -159,7 +163,7 @@ export default function EditDiaLog(props) {
                <input
                   onBlur={changePhoneNumber}
                   className="input"
-                  placeholder={props.customer.phoneNumber}
+                  placeholder={customer.phoneNumber}
                ></input>
             </div>
             {errorMessage.isDisplay && (
@@ -171,7 +175,7 @@ export default function EditDiaLog(props) {
                </button>
                <button
                   className="cancel-button"
-                  onClick={e => props.closeEditDialog(null, true)}
+                  onClick={e => closeEditDialog(null, true)}
                >
                   Cancel
                </button>

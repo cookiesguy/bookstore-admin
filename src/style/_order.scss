@@ -2,9 +2,6 @@
    display: flex;
    flex-direction: column;
 }
-.select-option {
-   width: 400px;
-}
 .select-div {
    margin: 30px 0px;
    p {
@@ -41,17 +38,15 @@
 .current-book-list {
    height: 100%;
    overflow: auto;
-   border-bottom: 1px solid rgba(128, 128, 128, 0.877);
    padding-bottom: 15px;
 }
 .book-list {
-   padding-left: 80px;
-   margin-left: 30px;
-   min-width: 400px;
+   width: 400px;
    height: 455px;
    p {
       margin-top: 10px;
    }
+   margin-left: 160px;
 }
 .delete-book-button {
    padding: 8px;
@@ -63,6 +58,7 @@
 .add-area {
    display: flex;
    margin-left: 20px;
+   flex-wrap: wrap;
 }
 .book-item {
    margin: 15px 0px;
@@ -100,10 +96,8 @@ tr {
 .empty-list {
    display: flex;
    align-items: center;
-   padding-left: 100px;
    height: 100%;
    color: rgba(128, 128, 128, 0.877);
-   border-bottom: 1px solid rgba(128, 128, 128, 0.877);
    span {
       margin-left: 10px;
    }

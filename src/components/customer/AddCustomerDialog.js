@@ -6,7 +6,7 @@ import {
    validateString,
 } from 'Helper/validate';
 
-export default function AddCustomerDialog(props) {
+export default function AddCustomerDialog({ openAddDialog, closeAddDialog }) {
    const [newCustomer, setNewCustomer] = useState({});
 
    const [errorMessage, setErrorMessage] = useState({
@@ -87,12 +87,12 @@ export default function AddCustomerDialog(props) {
          checkValidPhoneNumber() &&
          checkValidAddressAndName()
       ) {
-         props.closeAddDialog(newCustomer, false);
+         closeAddDialog(newCustomer, false);
       }
    };
 
    return (
-      <Dialog open={props.openAddDialog}>
+      <Dialog open={openAddDialog}>
          <div className="dialog">
             <h3>Add customer</h3>
             <div className="input-info">
@@ -122,7 +122,7 @@ export default function AddCustomerDialog(props) {
                   className="cancel-button"
                   onClick={e => {
                      setNewCustomer({});
-                     props.closeAddDialog(null, true);
+                     closeAddDialog(null, true);
                   }}
                >
                   Cancel

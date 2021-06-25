@@ -1,6 +1,7 @@
 import { useEffect, useState, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@material-ui/data-grid';
+import { isNull } from 'lodash';
 import {
    faPenAlt,
    faPlusCircle,
@@ -80,9 +81,16 @@ function Customer() {
 
    async function fetchAllCustomer() {
       const data = await getAllCustomer();
-      setRows(data);
-      setLoading(false);
-      setOpenSnackBar(false);
+
+      if (isNull(data)) {
+         setOpenSnackBar(true);
+         setLoading(false);
+         setSnackBarMessage('Fail to get data');
+      } else {
+         setRows(data);
+         setLoading(false);
+         setOpenSnackBar(false);
+      }
    }
 
    const editButtonClick = el => {
