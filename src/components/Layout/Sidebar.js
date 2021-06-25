@@ -10,7 +10,7 @@ import {
    faListAlt,
    faBook,
 } from '@fortawesome/free-solid-svg-icons';
-import { useTransition } from 'context/SideBarContext';
+import { useTransition } from 'Context/SideBarContext';
 
 export default function Sidebar() {
    const sidebarContext = useTransition();
@@ -18,22 +18,19 @@ export default function Sidebar() {
    const isBigScreen = useMediaQuery({ query: '(min-width: 610px)' });
 
    const handleRedirect = () => {
-      const width = document.body.clientWidth;
-      if (width < 600) {
+      if (!isBigScreen) {
          sidebarContext.toggleSideBarVisible();
       }
    };
 
    useEffect(() => {
-      if (isBigScreen) sidebarContext.toggleSideBarVisible();
-      else sidebarContext.toggleClickFromNav(false);
+      if (isBigScreen) sidebarContext.toggleSideBarVisible(false);
    }, [isBigScreen]);
 
    return (
       <div
          className={`${
-            (isBigScreen && sidebarContext.isVisible) ||
-            (sidebarContext.isClickFromNav && sidebarContext.isVisible)
+            isBigScreen || sidebarContext.isVisible
                ? 'sidebar-visible'
                : 'sidebar-un-visible'
          }`}

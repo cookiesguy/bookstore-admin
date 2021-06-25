@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Avatar from 'images/among-us-avatar.png';
 import { Link } from 'react-router-dom';
-import { useLogin } from 'context/LoginContext';
+import { useMediaQuery } from 'react-responsive';
+import { useLogin } from 'Context/LoginContext';
 import {
    faSignOutAlt,
    faIdBadge,
@@ -13,7 +13,8 @@ import {
    faCog,
    faTachometerAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { useTransition } from 'context/SideBarContext';
+import Avatar from 'Images/among-us-avatar.png';
+import { useTransition } from 'Context/SideBarContext';
 
 export default function NavigationBar() {
    const [openPopup, setOpenPopup] = useState(false);
@@ -22,14 +23,15 @@ export default function NavigationBar() {
 
    const sidebarContext = useTransition();
 
+   const isSmallScreen = useMediaQuery({ query: ' (max-width: 440px) ' });
+
    const openPopupDiv = () => {
       console.log('pop');
       setOpenPopup(!openPopup);
    };
 
    const openSideBar = () => {
-      sidebarContext.toggleSideBarVisible();
-      sidebarContext.toggleClickFromNav(true);
+      sidebarContext.toggleSideBarVisible(!useTransition.isVisible);
    };
 
    const logOutAccount = () => {
@@ -44,7 +46,6 @@ export default function NavigationBar() {
                <FontAwesomeIcon icon={faBars}></FontAwesomeIcon>
             </p>
             <h3>BOOK LAND</h3>
-            <div onClick={openPopupDiv} className="narrow-down"></div>
          </div>
          <ul>
             <Link to="/">
@@ -59,10 +60,10 @@ export default function NavigationBar() {
                   <span>Setting</span>
                </li>
             </Link>
-            <li onClick={openPopupDiv}>
-               <img src={Avatar} className="avatar"></img>
-            </li>
          </ul>
+         <div className="image" onClick={openPopupDiv}>
+            <img src={Avatar} className="avatar"></img>
+         </div>
          {openPopup && (
             <div className="pop-up-account">
                <p>
@@ -77,6 +78,24 @@ export default function NavigationBar() {
                <p onClick={logOutAccount}>
                   <FontAwesomeIcon icon={faSignOutAlt}></FontAwesomeIcon>Logout
                </p>
+               {isSmallScreen && (
+                  <div className="popup-link">
+                     <Link to="/">
+                        <p>
+                           <FontAwesomeIcon
+                              icon={faTachometerAlt}
+                           ></FontAwesomeIcon>
+                           <span>Dashboard</span>
+                        </p>
+                     </Link>
+                     <Link to="/settings">
+                        <p>
+                           <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
+                           <span>Setting</span>
+                        </p>
+                     </Link>
+                  </div>
+               )}
             </div>
          )}
       </div>

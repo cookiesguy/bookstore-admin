@@ -4,7 +4,7 @@ import {
    validateEmail,
    validateString,
    validatePhoneNumber,
-} from 'helper/validate';
+} from 'Helper/validate';
 
 export default function EditDiaLog(props) {
    const [editCustomer, setEditCustomer] = useState({});

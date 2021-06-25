@@ -68,7 +68,6 @@ a {
   background: rgba(0, 0, 0, 0.5);
   width: 100%;
   z-index: 2;
-  display: none;
   top: 0;
   bottom: 0;
 }
@@ -125,7 +124,7 @@ a {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 1;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   background-color: #fff;
@@ -173,8 +172,8 @@ li span {
   position: fixed;
   top: 90px;
   right: 30px;
-  -webkit-box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  -webkit-box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+          box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
   width: 150px;
   background-color: #fff;
   padding: 20px;
@@ -224,6 +223,10 @@ li span {
 #narrow-icon {
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
+}
+
+.popup-link a {
+  color: #4f5d73;
 }
 
 .dash-board {
@@ -296,9 +299,9 @@ li span {
     display: -ms-flexbox;
     display: flex;
     margin-right: 30px;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
     width: 200px;
   }
   .pop-up-account {

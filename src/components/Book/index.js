@@ -17,7 +17,7 @@ import {
 import EditDiaLog from './EditBookDialog';
 import AddNewBookDialog from './AddBookDialog';
 import DeleteDialog from './DeleteDialog';
-import SnackBar from 'components/common/SnackBar';
+import SnackBar from 'components/Common/SnackBar';
 
 function Books() {
    const [openEditDialog, setOpenEditDialog] = useState(false);

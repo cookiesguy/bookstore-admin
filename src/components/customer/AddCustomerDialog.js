@@ -4,7 +4,7 @@ import {
    validateEmail,
    validatePhoneNumber,
    validateString,
-} from 'helper/validate';
+} from 'Helper/validate';
 
 export default function AddCustomerDialog(props) {
    const [newCustomer, setNewCustomer] = useState({});

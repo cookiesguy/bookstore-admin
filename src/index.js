@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import 'style/main.css';
+import 'Style/main.css';
 import App from './App';
-import LoginProvider from 'context/LoginContext';
+import LoginProvider from 'Context/LoginContext';
+import SideBarProvider from 'Context/SideBarContext';
 
 ReactDOM.render(
    <BrowserRouter>
       <React.StrictMode>
          <LoginProvider>
-            <App />
+            <SideBarProvider>
+               <App />
+            </SideBarProvider>
          </LoginProvider>
       </React.StrictMode>
    </BrowserRouter>,

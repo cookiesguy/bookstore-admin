@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Dialog } from '@material-ui/core';
 import Option from './CategoryDialog';
-import { validateString, validateNumber } from 'helper/validate';
+import { validateString, validateNumber } from 'Helper/validate';
 import { getConfigItem } from 'api/settings';
 
 export default function AddNewBookDialog(props) {
@@ -60,7 +60,6 @@ export default function AddNewBookDialog(props) {
          setErrorMessage({ isDisplay: false, message: '' });
          props.closeAddDialog(newBook, false);
       }
-
    };
 
    const checkValidAmount = () => {

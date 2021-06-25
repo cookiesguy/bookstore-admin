@@ -7,7 +7,7 @@ import {
    faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { addNewCustomer, getAllCustomer } from 'api/customer';
-import SnackBar from 'components/common/SnackBar';
+import SnackBar from 'components/Common/SnackBar';
 import EditCustomerDiaLog from './EditCustomerDialog';
 import AddCustomerDialog from './AddCustomerDialog';
 import DeleteDialog from './DeleteCustomerDialog';

@@ -1,13 +1,12 @@
 import { Switch, Route } from 'react-router-dom';
 import { Dialog, Button } from '@material-ui/core';
 import { useState } from 'react';
-import { useLogin } from 'context/LoginContext';
+import { useLogin } from 'Context/LoginContext';
 import { userLogin } from 'api/authen';
-import Books from './books';
-import Setting from './settings';
-import Order from './orders';
-import NotFound from './404';
-import Customer from './customer';
+import Books from 'components/Book';
+import Setting from 'components/Setting';
+import Order from 'components/Order';
+import Customer from 'components/Customer';
 
 export default function Dashboard() {
    const [username, setUserName] = useState('');
@@ -59,9 +58,6 @@ export default function Dashboard() {
                </Route>
                <Route path="/customer">
                   <Customer></Customer>
-               </Route>
-               <Route>
-                  <NotFound></NotFound>
                </Route>
             </Switch>
          ) : (
