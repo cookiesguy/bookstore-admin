@@ -13,7 +13,7 @@ export default function DeleteDialog(props) {
                   Confirm
                </button>
                <button
-                  className="cancle-button"
+                  className="cancel-button"
                   onClick={e => props.closeDeleteDialog(false)}
                >
                   Cancel

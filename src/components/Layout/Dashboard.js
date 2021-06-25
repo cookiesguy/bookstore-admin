@@ -29,6 +29,7 @@ export default function Dashboard() {
       if (username === 'admin' && password === '1234') {
          setDisabledBtn(true);
          const res = await userLogin();
+         console.log(res);
          loginContext.changeLoginState();
          setDisabledBtn(false);
       } else {
