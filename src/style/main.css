@@ -2,7 +2,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
   background-color: #f2f2f2;
   color: #4f5d73;
 }
@@ -17,6 +16,11 @@ body {
 a {
   text-decoration: none;
   color: white;
+}
+
+.App {
+  position: relative;
+  height: 100%;
 }
 
 .sidebar {
@@ -63,13 +67,13 @@ a {
 }
 
 .disable-div {
-  width: 100%;
   position: absolute;
   background: rgba(0, 0, 0, 0.5);
   width: 100%;
   z-index: 2;
   top: 0;
   bottom: 0;
+  height: 100%;
 }
 
 .side-bar-item {
@@ -292,6 +296,9 @@ li span {
     display: flex;
     margin-right: 20px;
   }
+  .select-div {
+    width: 300px;
+  }
   li {
     padding: 0px 20px;
   }
@@ -320,6 +327,9 @@ li span {
   .config-item {
     margin: 20px 0px;
     font-size: 0.9rem;
+  }
+  .select-div {
+    width: 200px;
   }
 }
 
@@ -866,6 +876,43 @@ tr td {
 
 .empty-list span {
   margin-left: 10px;
+}
+
+.update-bill-dialog {
+  font-size: 0.8rem;
+  padding: 20px 70px;
+  width: 500px;
+  overflow-x: hidden;
+}
+
+.book-list-dialog {
+  height: 250px;
+}
+
+.select-div-dialog {
+  margin: 20px 0px;
+}
+
+.select-div-dialog p {
+  margin-bottom: 10px;
+}
+
+.select-div-dialog button {
+  padding: 10px;
+}
+
+.select-div-dialog input {
+  padding: 10px;
+}
+
+.button-div-order {
+  margin-top: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
 }
 
 .login-dialog {

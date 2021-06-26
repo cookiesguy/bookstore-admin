@@ -26,7 +26,6 @@ export default function NavigationBar() {
    const isSmallScreen = useMediaQuery({ query: ' (max-width: 440px) ' });
 
    const openPopupDiv = () => {
-      console.log('pop');
       setOpenPopup(!openPopup);
    };
 

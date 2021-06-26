@@ -103,3 +103,30 @@ tr {
    }
    font-size: 1.5rem;
 }
+.update-bill-dialog {
+   font-size: 0.8rem;
+   padding: 20px 70px;
+   width: 500px;
+   overflow-x: hidden;
+}
+.book-list-dialog {
+   height: 250px;
+}
+
+.select-div-dialog {
+   margin: 20px 0px;
+   p {
+      margin-bottom: 10px;
+   }
+   button {
+      padding: 10px;
+   }
+   input {
+      padding: 10px;
+   }
+}
+.button-div-order {
+   margin-top: 50px;
+   display: flex;
+   justify-content: space-evenly;
+}

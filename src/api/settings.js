@@ -5,7 +5,7 @@ export async function getAllConfig() {
       console.log(data);
       return data;
    }
-   return [];
+   return null;
 }
 
 export async function toggleConfig(name) {

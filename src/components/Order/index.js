@@ -4,12 +4,18 @@ import { DataGrid } from '@material-ui/data-grid';
 import Select from 'react-select';
 import { isNull } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+   faHistory,
+   faPlusCircle,
+   faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import { getAllCustomer } from 'api/customer';
 import { getAllBooks } from 'api/book';
 import { deleteBillApi, getAllBill } from 'api/bill';
-import DeleteDialog from './DeleteDialog';
 import SnackBar from 'components/Common/SnackBar';
+import DeleteDialog from './DeleteDialog';
+import UpdateDialog from './UpdateDialog';
+import BookList from './BookList';
 
 function Order() {
    const [customerOption, setCustomerOption] = useState([]);
@@ -26,6 +32,8 @@ function Order() {
 
    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
+   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+
    const [openSnackBar, setOpenSnackBar] = useState(false);
 
    const [selectedRow, setSelectedRow] = useState({});
@@ -36,18 +44,16 @@ function Order() {
 
    const columns = [
       { field: 'id', headerName: 'Bill ID', width: 150 },
-      { field: 'name', headerName: 'Customer Name', width: 250 },
+      { field: 'name', headerName: 'Customer Name', width: 200 },
       {
-         field: 'phoneNumber',
+         field: 'phone',
          headerName: 'Phone',
-         type: 'number',
          width: 150,
       },
       {
          field: 'date',
          headerName: 'Create Date',
-         type: 'number',
-         width: 270,
+         width: 150,
       },
 
       {
@@ -58,6 +64,17 @@ function Order() {
             <button onClick={deleteBill} className="data-grid-btn delete-btn">
                <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                <span>Delete</span>
+            </button>
+         ),
+      },
+      {
+         field: 'update',
+         headerName: 'Update',
+         width: 130,
+         renderCell: params => (
+            <button onClick={updateBill} className="data-grid-btn edit-btn">
+               <FontAwesomeIcon icon={faHistory}></FontAwesomeIcon>
+               <span>Update</span>
             </button>
          ),
       },
@@ -87,6 +104,7 @@ function Order() {
          setOpenSnackBar(true);
          return;
       }
+      console.log(res);
       const temp = [];
       for (const bill of res) {
          try {
@@ -95,9 +113,11 @@ function Order() {
                name: bill.customer.name,
                phone: bill.customer.phoneNumber,
                date: Date(bill.dateTime),
+               details: bill.details,
             };
             temp.push(info);
          } catch (error) {
+            console.log(error);
             continue;
          }
       }
@@ -168,7 +188,15 @@ function Order() {
       }
    };
 
+   const closeUpdateDialog = () => {
+      setOpenUpdateDialog(false);
+   };
+
    const addNewBill = () => {};
+
+   const updateBill = () => {
+      setOpenUpdateDialog(true);
+   };
 
    useEffect(() => {
       fetchAllCustomer();
@@ -269,33 +297,17 @@ function Order() {
             openSnackBar={openSnackBar}
             message="Fail to get data"
          ></SnackBar>
+         <UpdateDialog
+            books={bookOption}
+            bilInfo={{
+               billId: selectedRow.id,
+               // books: selectedRow.detail.books,
+            }}
+            closeUpdateDialog={closeUpdateDialog}
+            openUpdateDialog={openUpdateDialog}
+         ></UpdateDialog>
       </div>
    );
-}
-
-function BookList(props) {
-   let i = 0;
-   const content = props.books.map(el => (
-      <div className="book-item" key={i++}>
-         <p>
-            <span>Title:</span> {el.info.title}
-         </p>
-         <p>
-            <span>Price:</span> {el.price}
-         </p>
-         <p>
-            <span>Quantity:</span> {el.quantity}
-         </p>
-         <button
-            onClick={e => props.removeBook(el.info.title)}
-            className="delete-book-button"
-         >
-            Delete
-         </button>
-      </div>
-   ));
-
-   return content;
 }
 
 export default memo(Order);

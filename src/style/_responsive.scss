@@ -23,6 +23,9 @@
       display: flex;
       margin-right: 20px;
    }
+   .select-div {
+      width: 300px;
+   }
 
    li {
       padding: 0px 20px;
@@ -48,5 +51,8 @@
    .config-item {
       margin: 20px 0px;
       font-size: 0.9rem;
+   }
+   .select-div {
+      width: 200px;
    }
 }

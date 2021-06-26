@@ -13,7 +13,7 @@ import {
    getAllBooks,
    getAllCategory,
    upDateBook,
-} from '../../api/book';
+} from 'api/book';
 import EditDiaLog from './EditBookDialog';
 import AddNewBookDialog from './AddBookDialog';
 import DeleteDialog from './DeleteDialog';
@@ -21,13 +21,20 @@ import SnackBar from 'components/Common/SnackBar';
 
 function Books() {
    const [openEditDialog, setOpenEditDialog] = useState(false);
+
    const [openAddDialog, setOpenAddDialog] = useState(false);
+
    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
    const [openSnackBar, setOpenSnackBar] = useState(false);
+
    const [snackBarMessage, setSnackBarMessage] = useState('');
    const [selectedRow, setSelectedRow] = useState({});
+
    const [category, setCategory] = useState([]);
+
    const [loading, setLoading] = useState(true);
+
    const columns = [
       { field: 'id', headerName: 'ID', width: 90 },
       { field: 'name', headerName: 'Name', width: 350 },
@@ -161,45 +168,7 @@ function Books() {
          }
       }
    };
-   const handleFileSubmit = e => {};
-   //   e.preventDefault();
-   //   console.log(e.target.files[0]);
-   //   const file = e.target.files[0];
-   //   const reader = new FileReader();
-   //   reader.onload = evt => {
-   //     // evt = on_file_select event
-   //     /* Parse data */
-   //     const bstr = evt.target.result;
-   //     const wb = XLSX.read(bstr, { type: 'binary' });
-   //     /* Get first worksheet */
-   //     const wsname = wb.SheetNames[0];
-   //     const ws = wb.Sheets[wsname];
-   //     /* Convert array of arrays */
-   //     const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
 
-   //     console.log('Data>>>' + data); // shows that excel data is read
-   //     console.log(convertToJson(data)); // shows data in json format
-   //   };
-   //   reader.readAsBinaryString(file);
-   // };
-   // const convertToJson = csv => {
-   //   const lines = csv.split('\n');
-
-   //   const result = [];
-
-   //   const headers = lines[0].split(',');
-
-   //   for (let i = 1; i < lines.length; i++) {
-   //     let obj = {};
-   //     let currentLine = lines[i].split(',');
-
-   //     for (let j = 0; j < headers.length; j++) {
-   //       obj[headers[j]] = currentLine[j];
-   //     }
-   //     result.push(obj);
-   //   }
-   //   return JSON.stringify(result);
-   // };
    return (
       <div className="data-grid">
          <div className="table">
@@ -226,7 +195,6 @@ function Books() {
                <button className="import-button data-grid-btn">
                   <input
                      accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                     onChange={handleFileSubmit}
                      type="file"
                      name="file"
                      id="file"
