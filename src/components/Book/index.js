@@ -86,18 +86,18 @@ function Books() {
    ];
 
    async function fetchAllCategory() {
-      const res = await getAllCategory();
-      if (res !== null) {
-         setCategory(res);
+      const data = await getAllCategory();
+      if (data !== null) {
+         setCategory(data);
       }
    }
 
    async function fetchAllBook() {
       setLoading(true);
-      const res = await getAllBooks();
-      if (res !== null) {
+      const data = await getAllBooks();
+      if (data !== null) {
          const rowData = [];
-         for (const element of res) {
+         for (const element of data) {
             rowData.push({
                id: element.id,
                name: element.title,

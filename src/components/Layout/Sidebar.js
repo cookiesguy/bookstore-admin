@@ -7,8 +7,8 @@ import {
    faChartLine,
    faWallet,
    faUserFriends,
-   faListAlt,
    faBook,
+   faMoneyBill,
 } from '@fortawesome/free-solid-svg-icons';
 import { useTransition } from 'Context/SideBarContext';
 
@@ -48,12 +48,7 @@ export default function Sidebar() {
                </div>
             </div>
          </Link>
-         <div className="side-bar-item">
-            <div>
-               <FontAwesomeIcon icon={faListAlt}></FontAwesomeIcon>
-               <span>Category</span>
-            </div>
-         </div>
+
          <Link to="/customer" onClick={handleRedirect}>
             <div className="side-bar-item">
                <div>
@@ -70,6 +65,12 @@ export default function Sidebar() {
                </div>
             </div>
          </Link>
+         <div className="side-bar-item">
+            <div>
+               <FontAwesomeIcon icon={faMoneyBill}></FontAwesomeIcon>
+               <span>Payment</span>
+            </div>
+         </div>
          <div className="side-bar-item">
             <div>
                <FontAwesomeIcon icon={faChartLine}></FontAwesomeIcon>

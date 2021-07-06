@@ -280,6 +280,12 @@ li span {
   }
 }
 
+@media screen and (max-width: 700px) {
+  .select-div {
+    width: 300px;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .nav-bar {
     padding: 40px 0px;
@@ -295,9 +301,6 @@ li span {
     display: -ms-flexbox;
     display: flex;
     margin-right: 20px;
-  }
-  .select-div {
-    width: 300px;
   }
   li {
     padding: 0px 20px;
@@ -415,11 +418,11 @@ li span {
 }
 
 .cancel-button {
-  background-color: #921818;
+  background-color: #c91212;
   border-radius: 5px;
   padding: 10px;
   color: #fff;
-  border-color: #921818;
+  border-color: #c91212;
 }
 
 .button-div {
@@ -436,15 +439,15 @@ li span {
 }
 
 .error {
-  color: #921818;
+  color: #c91212;
   margin-bottom: 15px;
   font-size: 0.8rem;
   font-weight: bold;
 }
 
 .delete-btn {
-  background-color: #921818;
-  border-color: #921818;
+  background-color: #c91212;
+  border-color: #c91212;
   width: 120px;
 }
 
@@ -811,8 +814,8 @@ li span {
 
 .delete-book-button {
   padding: 8px;
-  background-color: #921818;
-  border-color: #921818;
+  background-color: #c91212;
+  border-color: #c91212;
   border-radius: 5px;
   color: #fff;
 }

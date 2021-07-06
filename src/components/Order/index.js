@@ -24,7 +24,7 @@ function Order() {
 
    const [currentBookList, setCurrentBookList] = useState([]);
 
-   const [selectedBook, setSelectedBook] = useState({ quantity: 1 });
+   const [selectedBook, setSelectedBook] = useState({ amount: 1 });
 
    const [isDisableAddBook, setIsDisableAddBook] = useState(true);
 
@@ -81,41 +81,39 @@ function Order() {
    ];
 
    async function fetchAllBook() {
-      const res = await getAllBooks();
-      if (isNull(res)) {
+      const data = await getAllBooks();
+      if (isNull(data)) {
          setOpenSnackBar(true);
          return;
       }
-      assignBookLabel(res);
+      assignBookLabel(data);
    }
 
    async function fetchAllCustomer() {
-      const res = await getAllCustomer();
-      if (isNull(res)) {
+      const data = await getAllCustomer();
+      if (isNull(data)) {
          setOpenSnackBar(true);
          return;
       }
-      assignCustomerLabel(res);
+      assignCustomerLabel(data);
    }
 
    async function fetchAllBill() {
-      const res = await getAllBill();
-      if (isNull(res)) {
+      const data = await getAllBill();
+      if (isNull(data)) {
          setOpenSnackBar(true);
          return;
       }
-      console.log(res);
       const temp = [];
-      for (const bill of res) {
+      for (const bill of data) {
          try {
-            const info = {
+            temp.push({
                id: bill.billId,
                name: bill.customer.name,
                phone: bill.customer.phoneNumber,
                date: Date(bill.dateTime),
                details: bill.details,
-            };
-            temp.push(info);
+            });
          } catch (error) {
             console.log(error);
             continue;
@@ -136,13 +134,16 @@ function Order() {
    };
 
    const bookComboboxOnchange = event => {
-      setSelectedBook({ ...selectedBook, info: event });
+      setSelectedBook({ ...selectedBook, ...event });
    };
 
    const assignCustomerLabel = customers => {
       const temp = [];
       for (const el of customers) {
-         temp.push({ ...el, label: `${el.name}, Phone: ${el.phoneNumber}` });
+         temp.push({
+            label: `${el.name}, Phone: ${el.phoneNumber}`,
+            id: el.id,
+         });
       }
       setCustomerOption(temp);
    };
@@ -150,7 +151,7 @@ function Order() {
    const assignBookLabel = books => {
       const temp = [];
       for (const el of books) {
-         temp.push({ ...el, label: el.title });
+         temp.push({ label: el.title, id: el.id });
       }
       setBookOption(temp);
    };
@@ -168,16 +169,16 @@ function Order() {
    };
 
    const removeBook = bookName => {
-      const newList = currentBookList.filter(el => el.info.title !== bookName);
+      const newList = currentBookList.filter(el => el.label !== bookName);
       setCurrentBookList(newList);
    };
 
    const changeQuantity = event => {
-      let quantity = parseInt(event.target.value);
-      if (quantity < 0) {
-         quantity = 1;
+      let amount = parseInt(event.target.value);
+      if (amount < 0) {
+         amount = 1;
       }
-      setSelectedBook({ ...selectedBook, quantity: quantity });
+      setSelectedBook({ ...selectedBook, amount: amount });
    };
 
    const closeDeleteDialog = isConfirm => {
@@ -207,7 +208,7 @@ function Order() {
    useEffect(() => {
       let sum = 0;
       for (const el of currentBookList) {
-         sum += el.price * el.quantity;
+         sum += el.price * el.amount;
       }
       setTotalMoney(sum);
    }, [currentBookList]);
@@ -234,7 +235,7 @@ function Order() {
                   ></Select>
                </div>
                <div className="select-div">
-                  <p>Quantity</p>
+                  <p>amount</p>
                   <input
                      defaultValue="1"
                      onChange={changeQuantity}
@@ -299,10 +300,7 @@ function Order() {
          ></SnackBar>
          <UpdateDialog
             books={bookOption}
-            bilInfo={{
-               billId: selectedRow.id,
-               // books: selectedRow.detail.books,
-            }}
+            billId={selectedRow.id}
             closeUpdateDialog={closeUpdateDialog}
             openUpdateDialog={openUpdateDialog}
          ></UpdateDialog>

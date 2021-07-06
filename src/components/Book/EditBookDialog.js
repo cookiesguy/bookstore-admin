@@ -28,10 +28,12 @@ export default function EditDiaLog(props) {
    }, [props.book]);
 
    const fetchConfig = async () => {
-      const resOne = await getConfigItem('MinimumImportBook');
-      const resTwo = await getConfigItem('MaximumAmountBookLeftBeforeImport');
-      setMinimumImportBook(resOne);
-      setMaximumBook(resTwo);
+      const configOne = await getConfigItem('MinimumImportBook');
+      const configTwo = await getConfigItem(
+         'MaximumAmountBookLeftBeforeImport'
+      );
+      setMinimumImportBook(configOne);
+      setMaximumBook(configTwo);
    };
 
    const changeName = event => {

@@ -16,3 +16,12 @@ export async function deleteBillApi(id) {
       method: 'POST',
    });
 }
+
+export async function getBillDetail(id) {
+   const res = await fetch(`/api/bill/detail/${id}`);
+   if (res.ok) {
+      const data = await res.json();
+      return data;
+   }
+   return null;
+}

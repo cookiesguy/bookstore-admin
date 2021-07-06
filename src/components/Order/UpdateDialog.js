@@ -1,25 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
+import { isUndefined } from 'lodash';
 import { Dialog } from '@material-ui/core';
+import { getBillDetail } from 'api/bill';
 import BookList from './BookList';
 
 export default function UpdateDialog({
    closeUpdateDialog,
    openUpdateDialog,
    books,
+   billId,
 }) {
    const [bookOption, setBookOption] = useState([]);
 
    const [currentBookList, setCurrentBookList] = useState([]);
 
-   const [selectedBook, setSelectedBook] = useState({ quantity: 1 });
+   const [selectedBook, setSelectedBook] = useState({ amount: 1 });
 
    const [isDisableAddBook, setIsDisableAddBook] = useState(true);
 
    const [totalMoney, setTotalMoney] = useState(0);
 
    const bookComboboxOnchange = event => {
-      setSelectedBook({ ...selectedBook, info: event });
+      setSelectedBook({ ...selectedBook, ...event });
    };
 
    const priceChange = event => {
@@ -35,22 +39,42 @@ export default function UpdateDialog({
    };
 
    const removeBook = bookName => {
-      const newList = currentBookList.filter(el => el.info.title !== bookName);
+      const newList = currentBookList.filter(el => el.label !== bookName);
       setCurrentBookList(newList);
    };
 
    const changeQuantity = event => {
-      let quantity = parseInt(event.target.value);
-      if (quantity < 0) {
-         quantity = 1;
+      let amount = parseInt(event.target.value);
+      if (amount < 0) {
+         amount = 1;
       }
-      setSelectedBook({ ...selectedBook, quantity: quantity });
+      setSelectedBook({ ...selectedBook, amount: amount });
    };
+
+   async function fetchBillDetail() {
+      const data = await getBillDetail(billId);
+
+      const temp = [];
+      for (const el of data) {
+         temp.push({
+            id: el.book.id,
+            billDetailId: el.billDetailId,
+            label: el.book.title,
+            price: el.price,
+            amount: el.amount,
+         });
+      }
+      setCurrentBookList(temp);
+   }
+
+   useEffect(() => {
+      if (!isUndefined(billId)) fetchBillDetail();
+   }, [billId]);
 
    useEffect(() => {
       let sum = 0;
       for (const el of currentBookList) {
-         sum += el.price * el.quantity;
+         sum += el.price * el.amount;
       }
       setTotalMoney(sum);
    }, [currentBookList]);
@@ -73,7 +97,7 @@ export default function UpdateDialog({
                   ></Select>
                </div>
                <div className="select-div-dialog">
-                  <p>Quantity</p>
+                  <p>amount</p>
                   <input
                      defaultValue="1"
                      onChange={changeQuantity}
