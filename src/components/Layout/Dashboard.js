@@ -8,6 +8,8 @@ import Setting from 'components/Setting';
 import Order from 'components/Order';
 import Customer from 'components/Customer';
 import NotFound from 'components/Layout/NotFound';
+import Payment from 'components/Payment';
+import Statistic from 'components/Statistic';
 
 export default function Dashboard() {
    const [username, setUserName] = useState('');
@@ -60,6 +62,12 @@ export default function Dashboard() {
                </Route>
                <Route path="/customer">
                   <Customer></Customer>
+               </Route>
+               <Route path="/payment">
+                  <Payment></Payment>
+               </Route>
+               <Route path="/statistic">
+                  <Statistic></Statistic>
                </Route>
                <Route>
                   <NotFound></NotFound>

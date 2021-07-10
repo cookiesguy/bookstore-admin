@@ -1,6 +1,7 @@
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, useMemo, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@material-ui/data-grid';
+import cache from 'memory-cache';
 import { isNull } from 'lodash';
 import {
    faPenAlt,
@@ -30,63 +31,73 @@ function Customer() {
 
    const [rows, setRows] = useState([]);
 
-   const columns = [
-      { field: 'id', headerName: 'ID', width: 90 },
-      { field: 'name', headerName: 'Name', width: 150 },
-      {
-         field: 'address',
-         headerName: 'Address',
-         width: 150,
-      },
-      {
-         field: 'phoneNumber',
-         headerName: 'Phone',
-         width: 150,
-      },
-      {
-         field: 'email',
-         headerName: 'Email',
-         type: 'number',
-         width: 150,
-      },
-      {
-         field: 'edit',
-         headerName: 'Edit',
-         width: 110,
-         renderCell: params => (
-            <button
-               className="data-grid-btn edit-btn"
-               onClick={editButtonClick}
-            >
-               <FontAwesomeIcon icon={faPenAlt}></FontAwesomeIcon>
-               <span>Edit</span>
-            </button>
-         ),
-      },
-      {
-         field: 'delete',
-         headerName: 'Delete',
-         width: 130,
-         renderCell: params => (
-            <button
-               className="data-grid-btn delete-btn"
-               onClick={deleteButtonClick}
-            >
-               <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-               <span>Delete</span>
-            </button>
-         ),
-      },
-   ];
+   const columns = useMemo(
+      () => [
+         { field: 'id', headerName: 'ID', width: 90 },
+         { field: 'name', headerName: 'Name', width: 150 },
+         {
+            field: 'address',
+            headerName: 'Address',
+            width: 150,
+         },
+         {
+            field: 'phoneNumber',
+            headerName: 'Phone',
+            width: 150,
+         },
+         {
+            field: 'email',
+            headerName: 'Email',
+            type: 'number',
+            width: 150,
+         },
+         {
+            field: 'edit',
+            headerName: 'Edit',
+            width: 110,
+            renderCell: params => (
+               <button
+                  className="data-grid-btn edit-btn"
+                  onClick={editButtonClick}
+               >
+                  <FontAwesomeIcon icon={faPenAlt}></FontAwesomeIcon>
+                  <span>Edit</span>
+               </button>
+            ),
+         },
+         {
+            field: 'delete',
+            headerName: 'Delete',
+            width: 130,
+            renderCell: params => (
+               <button
+                  className="data-grid-btn delete-btn"
+                  onClick={deleteButtonClick}
+               >
+                  <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                  <span>Delete</span>
+               </button>
+            ),
+         },
+      ],
+      []
+   );
 
    async function fetchAllCustomer() {
-      const data = await getAllCustomer();
+      let data;
+      const cacheMemo = cache.get('api/customer');
+      if (cacheMemo) {
+         data = cacheMemo;
+      } else {
+         data = await getAllCustomer();
+      }
 
       if (isNull(data)) {
          setOpenSnackBar(true);
          setLoading(false);
          setSnackBarMessage('Fail to get data');
       } else {
+         cache.put('api/customer', data, 1000000);
          setRows(data);
          setLoading(false);
          setOpenSnackBar(false);
@@ -121,6 +132,7 @@ function Customer() {
             setLoading(true);
             setSnackBarMessage('Action complete loading data...');
             setOpenSnackBar(true);
+            cache.clear();
             setTimeout(fetchAllCustomer(), 2000);
          } else {
             setSnackBarMessage('An occur error happen, please try later');

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { isUndefined } from 'lodash';
+import { isUndefined, find } from 'lodash';
 import { Dialog } from '@material-ui/core';
 import { getBillDetail } from 'api/bill';
 import BookList from './BookList';
@@ -35,6 +35,14 @@ export default function UpdateDialog({
    };
 
    const addBookList = () => {
+      const foundBook = find(currentBookList, selectedBook);
+      if (foundBook) {
+         foundBook.amount++;
+         const newList = currentBookList.filter(el => el.id !== foundBook.id);
+         newList.push(foundBook);
+         setCurrentBookList(newList);
+         return;
+      }
       setCurrentBookList([...currentBookList, selectedBook]);
    };
 
@@ -52,19 +60,22 @@ export default function UpdateDialog({
    };
 
    async function fetchBillDetail() {
-      const data = await getBillDetail(billId);
+      try {
+         const data = await getBillDetail(billId);
 
-      const temp = [];
-      for (const el of data) {
-         temp.push({
-            id: el.book.id,
-            billDetailId: el.billDetailId,
-            label: el.book.title,
-            price: el.price,
-            amount: el.amount,
-         });
-      }
-      setCurrentBookList(temp);
+         const temp = [];
+         console.log(data);
+         for (const el of data) {
+            temp.push({
+               id: el.book.id,
+               billDetailId: el.billDetailId,
+               label: el.book.title,
+               price: el.price,
+               amount: el.amount,
+            });
+         }
+         setCurrentBookList(temp);
+      } catch (error) {}
    }
 
    useEffect(() => {

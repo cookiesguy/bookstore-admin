@@ -18,6 +18,10 @@ a {
   color: white;
 }
 
+input {
+  padding: 10px;
+}
+
 .App {
   position: relative;
   height: 100%;
@@ -613,6 +617,15 @@ li span {
   padding: 10px;
 }
 
+.search {
+  padding: 10px;
+}
+
+.filter-category {
+  width: 120px;
+  padding: 10px;
+}
+
 @-webkit-keyframes lds-ellipsis1 {
   0% {
     -webkit-transform: scale(0);
@@ -744,6 +757,13 @@ li span {
           flex-direction: column;
   right: 0.5px;
   bottom: 0.5px;
+}
+
+.config-input {
+  padding: 5px;
+  outline: none;
+  width: 100px;
+  margin-left: 20px;
 }
 
 .order-add-area {

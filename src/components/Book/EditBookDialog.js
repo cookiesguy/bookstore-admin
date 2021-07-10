@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Dialog } from '@material-ui/core';
 import { getConfigItem } from 'api/settings';
 import { validateNumber, validateString } from 'Helper/validate';
@@ -27,14 +27,14 @@ export default function EditDiaLog(props) {
       fetchConfig();
    }, [props.book]);
 
-   const fetchConfig = async () => {
+   const fetchConfig = useCallback(async () => {
       const configOne = await getConfigItem('MinimumImportBook');
       const configTwo = await getConfigItem(
          'MaximumAmountBookLeftBeforeImport'
       );
       setMinimumImportBook(configOne);
       setMaximumBook(configTwo);
-   };
+   }, []);
 
    const changeName = event => {
       if (event.target.value === '')
@@ -46,15 +46,16 @@ export default function EditDiaLog(props) {
             return { ...prevState, name: event.target.value };
          });
    };
+
    const changeAuthor = event => {
       if (event.target.value === '') {
+         console.log('set author ne');
+         console.log(props.book.author);
+         setEditBook({ ...editBook, author: props.book.author });
+      } else
          setEditBook(prevState => {
-            return { ...prevState, author: props.book.author };
+            return { ...prevState, author: event.target.value };
          });
-      }
-      setEditBook(prevState => {
-         return { ...prevState, author: event.target.value };
-      });
    };
    const changeAmount = () => {
       if (
@@ -87,11 +88,13 @@ export default function EditDiaLog(props) {
          });
       }
    };
+
    const changeCategoryId = object => {
       setEditBook(prevState => {
          return { ...prevState, category: object };
       });
    };
+
    const handleNumberInput = event => {
       if (validateNumber(event.target.value)) {
          setErrorMessage({ isDisplay: false, message: '' });
@@ -102,10 +105,11 @@ export default function EditDiaLog(props) {
          return false;
       }
    };
+
    const checkBookInfoValid = () => {
       if (
-         !checkStringValid(editBook.name) ||
-         !checkStringValid(editBook.author)
+         checkStringValid(editBook.name) ||
+         checkStringValid(editBook.author)
       ) {
          setErrorMessage({ isDisplay: true, message: 'Invalid book info' });
          return false;
@@ -114,6 +118,7 @@ export default function EditDiaLog(props) {
          return true;
       }
    };
+
    const checkStringValid = str => {
       if (validateString(str)) {
          return false;
@@ -134,6 +139,7 @@ export default function EditDiaLog(props) {
          }
       }
    };
+
    return (
       <Dialog open={props.openEditDialog}>
          <div className="dialog">
@@ -141,7 +147,7 @@ export default function EditDiaLog(props) {
             <div className="input-info">
                <p className="input-header">Name</p>
                <input
-                  onBlur={changeName}
+                  onChange={changeName}
                   className="input"
                   placeholder={props.book.name}
                ></input>
@@ -149,7 +155,7 @@ export default function EditDiaLog(props) {
             <div className="input-info">
                <p className="input-header">Author</p>
                <input
-                  onBlur={changeAuthor}
+                  onChange={changeAuthor}
                   className="input"
                   placeholder={props.book.author}
                ></input>
@@ -191,7 +197,7 @@ export default function EditDiaLog(props) {
             <div className="input-info">
                <p className="input-header"> Add amount</p>
                <div className="plus-block">
-                  <input onBlur={handleNumberInput} type="number"></input>
+                  <input onChange={handleNumberInput} type="number"></input>
                   <button onClick={changeAmount}>Add</button>
                </div>
             </div>

@@ -1,23 +1,26 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@material-ui/data-grid';
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, memo, useMemo, useCallback } from 'react';
+import cache from 'memory-cache';
 import {
    faPenAlt,
    faPlusCircle,
    faTrash,
    faUpload,
 } from '@fortawesome/free-solid-svg-icons';
+import { find, isUndefined, isNull } from 'lodash';
 import {
    addNewBook,
    deleteBook,
    getAllBooks,
    getAllCategory,
    upDateBook,
+   filterAndSearch,
 } from 'api/book';
+import SnackBar from 'components/Common/SnackBar';
 import EditDiaLog from './EditBookDialog';
 import AddNewBookDialog from './AddBookDialog';
 import DeleteDialog from './DeleteDialog';
-import SnackBar from 'components/Common/SnackBar';
 
 function Books() {
    const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -29,83 +32,105 @@ function Books() {
    const [openSnackBar, setOpenSnackBar] = useState(false);
 
    const [snackBarMessage, setSnackBarMessage] = useState('');
+
    const [selectedRow, setSelectedRow] = useState({});
 
    const [category, setCategory] = useState([]);
 
+   const [rows, setRows] = useState([]);
+
    const [loading, setLoading] = useState(true);
 
-   const columns = [
-      { field: 'id', headerName: 'ID', width: 90 },
-      { field: 'name', headerName: 'Name', width: 350 },
-      {
-         field: 'category',
-         headerName: 'Category',
-         width: 150,
-         renderCell: params => <span>{params.value.name}</span>,
-      },
-      {
-         field: 'author',
-         headerName: 'Author',
-         width: 150,
-      },
-      {
-         field: 'amount',
-         headerName: 'Amount',
-         type: 'number',
-         width: 150,
-      },
-      {
-         field: 'edit',
-         headerName: 'Edit',
-         width: 110,
-         renderCell: params => (
-            <button
-               className="data-grid-btn edit-btn"
-               onClick={editButtonClick}
-            >
-               <FontAwesomeIcon icon={faPenAlt}></FontAwesomeIcon>
-               <span>Edit</span>
-            </button>
-         ),
-      },
-      {
-         field: 'delete',
-         headerName: 'Delete',
-         width: 130,
-         renderCell: params => (
-            <button
-               className="data-grid-btn delete-btn"
-               onClick={deleteButtonClick}
-            >
-               <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-               <span>Delete</span>
-            </button>
-         ),
-      },
-   ];
+   const [searchBook, setSearchBook] = useState('');
 
-   async function fetchAllCategory() {
+   const [filterCategory, setFilterCategory] = useState({ name: 'All', id: 0 });
+
+   const columns = useMemo(
+      () => [
+         { field: 'id', headerName: 'ID', width: 90 },
+         { field: 'name', headerName: 'Name', width: 350 },
+         {
+            field: 'category',
+            headerName: 'Category',
+            width: 150,
+            renderCell: params => <span>{params.value.name}</span>,
+         },
+         {
+            field: 'author',
+            headerName: 'Author',
+            width: 150,
+         },
+         {
+            field: 'amount',
+            headerName: 'Amount',
+            type: 'number',
+            width: 150,
+         },
+         {
+            field: 'edit',
+            headerName: 'Edit',
+            width: 110,
+            renderCell: params => (
+               <button
+                  className="data-grid-btn edit-btn"
+                  onClick={editButtonClick}
+               >
+                  <FontAwesomeIcon icon={faPenAlt}></FontAwesomeIcon>
+                  <span>Edit</span>
+               </button>
+            ),
+         },
+         {
+            field: 'delete',
+            headerName: 'Delete',
+            width: 130,
+            renderCell: params => (
+               <button
+                  className="data-grid-btn delete-btn"
+                  onClick={deleteButtonClick}
+               >
+                  <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                  <span>Delete</span>
+               </button>
+            ),
+         },
+      ],
+      []
+   );
+
+   const fetchAllCategory = useCallback(async () => {
       const data = await getAllCategory();
       if (data !== null) {
          setCategory(data);
       }
-   }
+   }, []);
 
-   async function fetchAllBook() {
+   const refactorRowData = useCallback(data => {
+      const rowData = [];
+      for (const element of data) {
+         rowData.push({
+            id: element.id,
+            name: element.title,
+            category: element.type,
+            author: element.author,
+            amount: element.currentAmount,
+         });
+      }
+      return rowData;
+   }, []);
+
+   const fetchAllBook = useCallback(async () => {
       setLoading(true);
-      const data = await getAllBooks();
+      let data;
+      const cacheData = cache.get('api/books');
+      if (cacheData) {
+         data = cacheData;
+      } else {
+         data = await getAllBooks();
+         cache.put('api/books', data, 10000000);
+      }
       if (data !== null) {
-         const rowData = [];
-         for (const element of data) {
-            rowData.push({
-               id: element.id,
-               name: element.title,
-               category: element.type,
-               author: element.author,
-               amount: element.currentAmount,
-            });
-         }
+         const rowData = refactorRowData(data);
          setRows(rowData);
          setOpenSnackBar(false);
          setLoading(false);
@@ -114,19 +139,21 @@ function Books() {
          setOpenSnackBar(true);
          setSnackBarMessage('Fail to get data');
       }
-   }
+   }, [refactorRowData]);
+
    useEffect(() => {
       fetchAllBook();
       fetchAllCategory();
-   }, []);
+   }, [fetchAllBook, fetchAllCategory]);
 
-   const [rows, setRows] = useState([]);
    const editButtonClick = el => {
       setOpenEditDialog(true);
    };
+
    const deleteButtonClick = el => {
       setOpenDeleteDialog(true);
    };
+
    const handleCellClick = el => {
       setSelectedRow(el.row);
    };
@@ -146,6 +173,7 @@ function Books() {
    const addBookClick = () => {
       setOpenAddDialog(true);
    };
+
    const closeAdddDialog = (newBook, isCancel) => {
       setOpenAddDialog(false);
       if (!isCancel) {
@@ -153,10 +181,12 @@ function Books() {
          if (result) {
             setOpenSnackBar(true);
             setSnackBarMessage('Action completed loading data...');
+            cache.clear();
             setTimeout(fetchAllBook, 2000);
          }
       }
    };
+
    const closeDeleteDialog = isConfirm => {
       setOpenDeleteDialog(false);
       if (isConfirm) {
@@ -164,8 +194,51 @@ function Books() {
          if (result) {
             setOpenSnackBar(true);
             setSnackBarMessage('Action completed loading data...');
+            cache.clear();
             setTimeout(fetchAllBook, 2000);
          }
+      }
+   };
+
+   const startFilterAndSearch = useCallback(
+      async (id, name) => {
+         if (id === 0) {
+            id = '';
+         }
+         setLoading(true);
+         const data = await filterAndSearch(id, name);
+         setLoading(false);
+         if (isNull(data)) {
+            alert('Found nothing');
+         } else {
+            const rowData = refactorRowData(data);
+            setRows(rowData);
+         }
+      },
+      [refactorRowData]
+   );
+
+   const handleKeyDown = event => {
+      const value = event.target.value;
+      if (value.length === 1) {
+         setSearchBook('');
+      }
+      if (event.key === 'Enter') {
+         setSearchBook(event.target.value);
+
+         startFilterAndSearch(filterCategory.id, value);
+      }
+   };
+
+   const handleSelectChange = event => {
+      const foundCategory = find(category, { name: event.target.value });
+
+      if (isUndefined(foundCategory)) {
+         setFilterCategory({ name: 'All', id: 0 });
+         startFilterAndSearch('', searchBook);
+      } else {
+         setFilterCategory(foundCategory);
+         startFilterAndSearch(foundCategory.id, searchBook);
       }
    };
 
@@ -205,6 +278,23 @@ function Books() {
                      <span>Import from excel</span>
                   </label>
                </button>
+               <input
+                  placeholder="Search book"
+                  onKeyDown={handleKeyDown}
+                  className="search"
+               ></input>
+               <select
+                  onChange={handleSelectChange}
+                  value={filterCategory.name}
+                  className="filter-category"
+               >
+                  <option value="All">All</option>
+                  {category.map(item => (
+                     <option key={item.id} value={item.name}>
+                        {item.name}
+                     </option>
+                  ))}
+               </select>
             </div>
             <DataGrid
                onCellClick={handleCellClick}

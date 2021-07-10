@@ -15,6 +15,9 @@ export async function deleteBillApi(id) {
       },
       method: 'POST',
    });
+   if (res.ok) return true;
+
+   return false;
 }
 
 export async function getBillDetail(id) {
@@ -24,4 +27,45 @@ export async function getBillDetail(id) {
       return data;
    }
    return null;
+}
+
+export async function createBill(customer, books) {
+   const bookArray = [];
+
+   books.map(el => {
+      const book = {
+         bookId: el.id,
+         amount: el.amount,
+         price: el.price,
+      };
+      bookArray.push(book);
+   });
+
+   const create = await fetch(`/api/bill/`, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+         Accept: 'application/json',
+      },
+      body: JSON.stringify({
+         CustomerID: parseInt(customer.id),
+      }),
+   });
+
+   if (!create.ok) return false;
+
+   const bill = await create.json();
+
+   const addBook = await fetch(`/api/bill/detail/${bill.id}`, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+         Accept: 'application/json',
+      },
+      body: JSON.stringify(bookArray),
+   });
+
+   if (!addBook.ok) return false;
+
+   return true;
 }

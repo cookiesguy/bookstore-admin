@@ -65,18 +65,22 @@ export default function Sidebar() {
                </div>
             </div>
          </Link>
-         <div className="side-bar-item">
-            <div>
-               <FontAwesomeIcon icon={faMoneyBill}></FontAwesomeIcon>
-               <span>Payment</span>
+         <Link to="/payment" onClick={handleRedirect}>
+            <div className="side-bar-item">
+               <div>
+                  <FontAwesomeIcon icon={faMoneyBill}></FontAwesomeIcon>
+                  <span>Payment</span>
+               </div>
             </div>
-         </div>
-         <div className="side-bar-item">
-            <div>
-               <FontAwesomeIcon icon={faChartLine}></FontAwesomeIcon>
-               <span>Statistic</span>
+         </Link>
+         <Link to="/statistic" onClick={handleRedirect}>
+            <div className="side-bar-item">
+               <div>
+                  <FontAwesomeIcon icon={faChartLine}></FontAwesomeIcon>
+                  <span>Statistic</span>
+               </div>
             </div>
-         </div>
+         </Link>
       </div>
    );
 }

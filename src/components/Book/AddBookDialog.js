@@ -109,7 +109,7 @@ export default function AddNewBookDialog(props) {
          setMinimumImport(item);
       }
       fetchConfig();
-   });
+   }, []);
 
    return category.length > 0 ? (
       <Dialog open={props.openAddDialog}>
@@ -117,12 +117,12 @@ export default function AddNewBookDialog(props) {
             <h3>Add book</h3>
             <div className="input-info">
                <p className="input-header">Name</p>
-               <input onBlur={changeName} className="input"></input>
+               <input onChange={changeName} className="input"></input>
             </div>
 
             <div className="input-info">
                <p className="input-header">Author</p>
-               <input onBlur={changeAuthor} className="input"></input>
+               <input onChange={changeAuthor} className="input"></input>
             </div>
             <div className="input-info">
                <p className="input-header">Category</p>
@@ -142,7 +142,7 @@ export default function AddNewBookDialog(props) {
             <div className="input-info">
                <p className="input-header">Amount</p>
                <input
-                  onBlur={changeAmount}
+                  onChange={changeAmount}
                   className="input"
                   type="number"
                ></input>
