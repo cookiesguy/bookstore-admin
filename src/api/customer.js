@@ -28,3 +28,24 @@ export async function addNewCustomer(newCustomer) {
    }
    return false;
 }
+
+export async function updateCustomer(customer) {
+   const res = await fetch('/api/customer/update', {
+      headers: {
+         'Content-Type': 'application/json',
+         Accept: 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({
+         CustomerID: customer.id,
+         Name: customer.name,
+         Email: customer.email,
+         Address: customer.address,
+         PhoneNumber: customer.phoneNumber,
+      }),
+   });
+   if (res.ok) {
+      return true;
+   }
+   return false;
+}

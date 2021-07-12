@@ -3,15 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@material-ui/data-grid';
 import cache from 'memory-cache';
 import { isNull } from 'lodash';
-import {
-   faPenAlt,
-   faPlusCircle,
-   faTrash,
-} from '@fortawesome/free-solid-svg-icons';
-import { addNewCustomer, getAllCustomer } from 'api/customer';
+import { faPenAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { addNewCustomer, getAllCustomer, updateCustomer } from 'api/customer';
 import SnackBar from 'components/Common/SnackBar';
 import Loading from 'components/Common/Loading';
-import ConfirmDialog from 'components/Common/ConfirmDialog';
 import RenderCellExpand from 'components/Common/RenderCellExpand';
 import { time } from 'Config/cache';
 import EditCustomerDiaLog from './EditCustomerDialog';
@@ -21,8 +16,6 @@ function Customer() {
    const [openEditDialog, setOpenEditDialog] = useState(false);
 
    const [openAddDialog, setOpenAddDialog] = useState(false);
-
-   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
    const [openSnackBar, setOpenSnackBar] = useState(false);
 
@@ -56,6 +49,12 @@ function Customer() {
             width: 150,
          },
          {
+            field: 'currentDebt',
+            headerName: 'Current Debt',
+            type: 'number',
+            width: 150,
+         },
+         {
             field: 'edit',
             headerName: 'Edit',
             width: 110,
@@ -66,20 +65,6 @@ function Customer() {
                >
                   <FontAwesomeIcon icon={faPenAlt}></FontAwesomeIcon>
                   <span>Edit</span>
-               </button>
-            ),
-         },
-         {
-            field: 'delete',
-            headerName: 'Delete',
-            width: 130,
-            renderCell: params => (
-               <button
-                  className="data-grid-btn delete-btn"
-                  onClick={deleteButtonClick}
-               >
-                  <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                  <span>Delete</span>
                </button>
             ),
          },
@@ -97,9 +82,9 @@ function Customer() {
       }
 
       if (isNull(data)) {
+         setSnackBarMessage('Fail to get data');
          setOpenSnackBar(true);
          setLoading(false);
-         setSnackBarMessage('Fail to get data');
       } else {
          cache.put('api/customer', data, time);
          setRows(data);
@@ -112,16 +97,25 @@ function Customer() {
       setOpenEditDialog(true);
    };
 
-   const deleteButtonClick = () => {
-      setOpenDeleteDialog(true);
-   };
-
    const handleCellClick = event => {
       setSelectedRow(event.row);
    };
 
-   const closeEditDialog = (editBook, isCancel) => {
+   const closeEditDialog = async (customer, isCancel) => {
       setOpenEditDialog(false);
+      if (!isCancel) {
+         const res = await updateCustomer(customer);
+         if (res) {
+            setLoading(true);
+            setSnackBarMessage('Action complete loading data...');
+            setOpenSnackBar(true);
+            cache.clear();
+            fetchAllCustomer();
+         } else {
+            setSnackBarMessage('An occur error happen, please try later');
+            setOpenSnackBar(true);
+         }
+      }
    };
 
    const addBookClick = () => {
@@ -137,16 +131,12 @@ function Customer() {
             setSnackBarMessage('Action complete loading data...');
             setOpenSnackBar(true);
             cache.clear();
-            setTimeout(fetchAllCustomer(), 2000);
+            fetchAllCustomer();
          } else {
             setSnackBarMessage('An occur error happen, please try later');
             setOpenSnackBar(true);
          }
       }
-   };
-
-   const closeDeleteDialog = isConfirm => {
-      setOpenDeleteDialog(false);
    };
 
    const closeSnackBar = () => {
@@ -187,14 +177,8 @@ function Customer() {
             closeAddDialog={closeAdddDialog}
          ></AddCustomerDialog>
 
-         <ConfirmDialog
-            close={closeDeleteDialog}
-            open={openDeleteDialog}
-            message="Delete this customer?"
-         ></ConfirmDialog>
-
          <SnackBar
-            openSnackBar={openSnackBar}
+            open={openSnackBar}
             message={snackBarMessage}
             onClose={closeSnackBar}
          ></SnackBar>

@@ -39,9 +39,11 @@ function Setting() {
       }
    }, []);
 
-   const handleToggleChange = event => {
+   const handleToggleChange = async event => {
+      setLoading(true);
       setIsCheck({ ...isCheck, [event.target.name]: event.target.checked });
-      toggleConfig(event.target.name);
+      await toggleConfig(event.target.name);
+      setLoading(false);
    };
 
    const handleInputChange = (event, index) => {
@@ -61,12 +63,13 @@ function Setting() {
    };
 
    const startChangeConfig = useCallback(async () => {
+      setLoading(true);
       const result = await changeConfigValue(newConfigs);
       if (result) {
          setSuccessSnackBar({ isOpen: true, message: 'Save successfully' });
          changeConfigValue(newConfigs);
-         setLoading(true);
-         setTimeout(fetchData, 2000);
+
+         fetchData();
       } else {
          setSuccessSnackBar({
             isOpen: false,
@@ -234,7 +237,7 @@ function Setting() {
                            reset
                         </Button>
                         <SnackBar
-                           openSnackBar={successSnackBar.isOpen}
+                           open={successSnackBar.isOpen}
                            message={successSnackBar.message}
                            onClose={closeSuccessSnackBar}
                         ></SnackBar>
@@ -243,7 +246,7 @@ function Setting() {
                </div>
             ) : (
                <SnackBar
-                  openSnackBar={openSnackBar}
+                  open={openSnackBar}
                   message="Cant get data, network error"
                   onClose={closeSnackBar}
                ></SnackBar>

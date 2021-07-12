@@ -137,7 +137,7 @@ export default function EditDiaLog({
             <div className="input-info">
                <p className="input-header">Name</p>
                <input
-                  onBlur={changeName}
+                  onChange={changeName}
                   className="input"
                   placeholder={customer.name}
                ></input>
@@ -145,7 +145,7 @@ export default function EditDiaLog({
             <div className="input-info">
                <p className="input-header">Address</p>
                <input
-                  onBlur={changeAddress}
+                  onChange={changeAddress}
                   className="input"
                   placeholder={customer.address}
                ></input>
@@ -153,7 +153,7 @@ export default function EditDiaLog({
             <div className="input-info">
                <p className="input-header">Email</p>
                <input
-                  onBlur={changeEmail}
+                  onChange={changeEmail}
                   className="input"
                   placeholder={customer.email}
                ></input>
@@ -161,7 +161,7 @@ export default function EditDiaLog({
             <div className="input-info">
                <p className="input-header">Phone</p>
                <input
-                  onBlur={changePhoneNumber}
+                  onChange={changePhoneNumber}
                   className="input"
                   placeholder={customer.phoneNumber}
                ></input>
@@ -170,7 +170,10 @@ export default function EditDiaLog({
                <div className="error">{errorMessage.message}</div>
             )}
             <div className="button-div">
-               <button className="save-button" onClick={closeDialog}>
+               <button
+                  className="save-button"
+                  onClick={e => closeDialog(editCustomer, false)}
+               >
                   Save
                </button>
                <button

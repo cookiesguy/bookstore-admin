@@ -24,7 +24,6 @@ export async function upDateBook(book) {
       TypeID: book.category.id,
       Amount: book.amount,
    };
-   console.log(data);
    const res = await fetch('/api/book/update', {
       headers: {
          'Content-Type': 'application/json',
@@ -63,7 +62,6 @@ export async function addNewBook(newBook) {
 }
 
 export async function deleteBook(id) {
-   console.log(id);
    const res = await fetch(`/api/book/delete/${id}`, {
       headers: {
          'Content-Type': 'application/json',

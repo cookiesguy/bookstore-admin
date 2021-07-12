@@ -52,8 +52,8 @@ export default function AddCustomerDialog({ openAddDialog, closeAddDialog }) {
 
    const checkValidAddressAndName = () => {
       if (
-         validateString(newCustomer.name) ||
-         validateString(newCustomer.address)
+         !validateString(newCustomer.name) ||
+         !validateString(newCustomer.address)
       ) {
          setErrorMessage({
             isDisplay: true,
@@ -97,19 +97,19 @@ export default function AddCustomerDialog({ openAddDialog, closeAddDialog }) {
             <h3>Add customer</h3>
             <div className="input-info">
                <p className="input-header">Name</p>
-               <input onBlur={changeName} className="input"></input>
+               <input onChange={changeName} className="input"></input>
             </div>
             <div className="input-info">
                <p className="input-header">Address</p>
-               <input onBlur={changeAddress} className="input"></input>
+               <input onChange={changeAddress} className="input"></input>
             </div>
             <div className="input-info">
                <p className="input-header">Phone</p>
-               <input onBlur={changePhoneNumber} className="input"></input>
+               <input onChange={changePhoneNumber} className="input"></input>
             </div>
             <div className="input-info">
                <p className="input-header">Email</p>
-               <input onBlur={changeEmail} className="input"></input>
+               <input onChange={changeEmail} className="input"></input>
             </div>
             {errorMessage.isDisplay && (
                <div className="error">{errorMessage.message}</div>

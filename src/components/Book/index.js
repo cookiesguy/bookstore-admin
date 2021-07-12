@@ -128,7 +128,6 @@ function Books() {
    }, []);
 
    const fetchAllBook = useCallback(async () => {
-      setLoading(true);
       let data;
       const cacheData = cache.get('api/books');
       if (cacheData) {
@@ -161,14 +160,22 @@ function Books() {
       setSelectedRow(el.row);
    };
 
-   const closeEditDialog = (newBook, isCancel) => {
+   const closeEditDialog = async (newBook, isCancel) => {
       setOpenEditDialog(false);
       if (!isCancel) {
-         const result = upDateBook(newBook);
+         setLoading(true);
+         cache.clear();
+         const result = await upDateBook(newBook);
          if (result) {
-            setOpenSnackBar(true);
             setSnackBarMessage('Action completed loading data...');
-            setTimeout(fetchAllBook, 2000);
+            setOpenSnackBar(true);
+
+            fetchAllBook();
+         } else {
+            setSnackBarMessage('Fail to update data...');
+            setOpenSnackBar(true);
+
+            setLoading(false);
          }
       }
    };
@@ -181,28 +188,40 @@ function Books() {
       setOpenAddDialog(true);
    };
 
-   const closeAdddDialog = (newBook, isCancel) => {
+   const closeAdddDialog = async (newBook, isCancel) => {
       setOpenAddDialog(false);
       if (!isCancel) {
-         const result = addNewBook(newBook);
+         setLoading(true);
+         const result = await addNewBook(newBook);
          if (result) {
-            setOpenSnackBar(true);
             setSnackBarMessage('Action completed loading data...');
+            setOpenSnackBar(true);
+
             cache.clear();
-            setTimeout(fetchAllBook, 2000);
+            fetchAllBook();
+         } else {
+            setLoading(false);
+            setSnackBarMessage('Fail to add data...');
+            setOpenSnackBar(true);
          }
       }
    };
 
-   const closeDeleteDialog = isConfirm => {
+   const closeDeleteDialog = async isConfirm => {
       setOpenDeleteDialog(false);
       if (isConfirm) {
-         const result = deleteBook(selectedRow.id);
+         setLoading(true);
+         const result = await deleteBook(selectedRow.id);
          if (result) {
-            setOpenSnackBar(true);
             setSnackBarMessage('Action completed loading data...');
+            setOpenSnackBar(true);
+
             cache.clear();
-            setTimeout(fetchAllBook, 2000);
+            fetchAllBook();
+         } else {
+            setLoading(false);
+            setSnackBarMessage('Cannot delete, system error..');
+            setOpenSnackBar(true);
          }
       }
    };
@@ -304,6 +323,11 @@ function Books() {
                pageSize={5}
             />
          </div>
+         <SnackBar
+            open={openSnackBar}
+            message={snackBarMessage}
+            onClose={closeSnackBar}
+         ></SnackBar>
          <EditDiaLog
             openEditDialog={openEditDialog}
             book={selectedRow}
@@ -320,12 +344,6 @@ function Books() {
             open={openDeleteDialog}
             message="Delete this book?"
          ></ConfirmDialog>
-
-         <SnackBar
-            openSnackBar={openSnackBar}
-            message={snackBarMessage}
-            onClose={closeSnackBar}
-         ></SnackBar>
       </div>
    );
 }

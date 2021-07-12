@@ -17,6 +17,7 @@ import {
    deletePayment,
    updatePayment,
 } from 'api/payment';
+import { time } from 'Config/cache';
 import UpdateDialog from './UpdateDialog';
 
 function Payment() {
@@ -161,7 +162,14 @@ function Payment() {
 
    const fetchAllPayment = useCallback(async () => {
       setLoading(true);
-      const data = await getAllPayment();
+      let data;
+      const cacheData = cache.get('api/payment');
+      if (cacheData) {
+         data = cacheData;
+      } else {
+         data = await getAllPayment();
+         cache.put('api/payment', data, time);
+      }
       if (isNil(data)) {
          setOpenSnackBar({ isOpen: true, message: 'Fail to get data' });
          setLoading(false);
@@ -177,7 +185,10 @@ function Payment() {
 
       const result = await addNewPaymentApi(selectedCustomer.id, money);
       if (result) {
-         setTimeout(fetchAllPayment, 2000);
+         cache.clear();
+
+         fetchAllPayment();
+         fetchAllCustomer();
       } else {
          setOpenSnackBar({
             isOpen: true,
@@ -185,14 +196,17 @@ function Payment() {
          });
          setLoading(false);
       }
-   }, [selectedCustomer, money, fetchAllPayment]);
+   }, [selectedCustomer, money, fetchAllPayment, fetchAllCustomer]);
 
    const startDeletePayment = useCallback(async () => {
       setLoading(true);
 
       const result = await deletePayment(selectedRow.id);
       if (result) {
-         setTimeout(fetchAllPayment, 2000);
+         cache.clear();
+
+         fetchAllPayment();
+         fetchAllCustomer();
       } else {
          setOpenSnackBar({
             isOpen: true,
@@ -200,7 +214,7 @@ function Payment() {
          });
          setLoading(false);
       }
-   }, [fetchAllPayment, selectedRow]);
+   }, [fetchAllPayment, selectedRow, fetchAllCustomer]);
 
    const startUpdatePayment = useCallback(
       async money => {
@@ -208,7 +222,10 @@ function Payment() {
 
          const result = await updatePayment(selectedRow.id, money);
          if (result) {
-            setTimeout(fetchAllPayment, 2000);
+            cache.clear();
+
+            fetchAllPayment();
+            fetchAllCustomer();
          } else {
             setOpenSnackBar({
                isOpen: true,
@@ -217,7 +234,7 @@ function Payment() {
             setLoading(false);
          }
       },
-      [fetchAllPayment, selectedRow]
+      [fetchAllPayment, selectedRow, fetchAllCustomer]
    );
 
    const customerComboboxOnchange = value => {
@@ -303,7 +320,7 @@ function Payment() {
             ></DataGrid>
          </div>
          <SnackBar
-            openSnackBar={openSnackBar.isOpen}
+            open={openSnackBar.isOpen}
             message={openSnackBar.message}
             onClose={closeSnackBar}
          ></SnackBar>

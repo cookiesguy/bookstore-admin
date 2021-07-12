@@ -184,7 +184,6 @@ function Order() {
    }, []);
 
    const fetchAllBill = useCallback(async () => {
-      setLoading(true);
       const data = await getAllBill();
       if (isNull(data)) {
          setOpenSnackBar({
@@ -312,11 +311,14 @@ function Order() {
          setLoading(true);
          const result = await updateBillApi(selectedRow.id, bookList);
          if (result) {
+            cache.clear();
             setOpenSnackBar({
                isOpen: true,
                message: 'Action complete loading data...',
             });
-            setTimeout(fetchAllBill, 2000);
+
+            fetchAllBill();
+            fetchAllCustomer();
          } else {
             setLoading(false);
             setOpenSnackBar({
@@ -325,18 +327,22 @@ function Order() {
             });
          }
       },
-      [selectedRow, fetchAllBill]
+      [selectedRow, fetchAllBill, fetchAllCustomer]
    );
 
-   const closeDeleteDialog = isConfirm => {
+   const closeDeleteDialog = async isConfirm => {
       setOpenDeleteDialog(false);
       if (isConfirm) {
+         setLoading(true);
          setOpenSnackBar({
             isOpen: true,
             message: 'Action complete loading data...',
          });
-         deleteBillApi(selectedRow.id);
-         setTimeout(fetchAllBill, 2000);
+         cache.clear();
+         await deleteBillApi(selectedRow.id);
+
+         fetchAllBill();
+         fetchAllCustomer();
       }
    };
 
@@ -346,7 +352,7 @@ function Order() {
       startUpdateBill(bookList);
    };
 
-   const addNewBill = () => {
+   const addNewBill = async () => {
       if (isUndefined(selectedCustomer) && currentBookList.length) {
          setOpenSnackBar({
             isOpen: true,
@@ -354,15 +360,18 @@ function Order() {
          });
          return;
       }
-      const result = createBill(selectedCustomer, currentBookList);
+      setLoading(true);
+      const result = await createBill(selectedCustomer, currentBookList);
       if (result) {
+         cache.clear();
+
          setOpenSnackBar({
             isOpen: true,
             message: 'Action complete loading data...',
          });
-         setTimeout(() => {
-            fetchAllBill();
-         }, 2000);
+
+         fetchAllBill();
+         fetchAllCustomer();
       }
    };
 
@@ -489,7 +498,7 @@ function Order() {
             message="Delete this bill?"
          ></ConfirmDialog>
          <SnackBar
-            openSnackBar={openSnackBar.isOpen}
+            open={openSnackBar.isOpen}
             message={openSnackBar.message}
             onClose={closeSnackBar}
          ></SnackBar>
