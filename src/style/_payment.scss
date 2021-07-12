@@ -1,0 +1,27 @@
+.select-area {
+   display: flex;
+   flex-wrap: wrap;
+}
+.money-input {
+   margin-right: 20px;
+}
+
+.customer-select {
+   width: 300px;
+   margin-right: 20px;
+}
+.update-payment-dialog {
+   padding: 20px;
+   height: 280px;
+   width: 300px;
+   display: flex;
+   justify-content: space-between;
+   flex-direction: column;
+}
+
+.input-payment {
+   height: 120px;
+   display: flex;
+   justify-content: space-between;
+   flex-direction: column;
+}

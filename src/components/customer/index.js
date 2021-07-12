@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo, memo, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@material-ui/data-grid';
 import cache from 'memory-cache';
@@ -10,9 +10,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { addNewCustomer, getAllCustomer } from 'api/customer';
 import SnackBar from 'components/Common/SnackBar';
+import Loading from 'components/Common/Loading';
+import ConfirmDialog from 'components/Common/ConfirmDialog';
+import RenderCellExpand from 'components/Common/RenderCellExpand';
+import { time } from 'Config/cache';
 import EditCustomerDiaLog from './EditCustomerDialog';
 import AddCustomerDialog from './AddCustomerDialog';
-import DeleteDialog from './DeleteCustomerDialog';
 
 function Customer() {
    const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -39,6 +42,7 @@ function Customer() {
             field: 'address',
             headerName: 'Address',
             width: 150,
+            renderCell: RenderCellExpand,
          },
          {
             field: 'phoneNumber',
@@ -83,7 +87,7 @@ function Customer() {
       []
    );
 
-   async function fetchAllCustomer() {
+   const fetchAllCustomer = useCallback(async () => {
       let data;
       const cacheMemo = cache.get('api/customer');
       if (cacheMemo) {
@@ -97,23 +101,23 @@ function Customer() {
          setLoading(false);
          setSnackBarMessage('Fail to get data');
       } else {
-         cache.put('api/customer', data, 1000000);
+         cache.put('api/customer', data, time);
          setRows(data);
          setLoading(false);
          setOpenSnackBar(false);
       }
-   }
+   }, []);
 
-   const editButtonClick = el => {
+   const editButtonClick = () => {
       setOpenEditDialog(true);
    };
 
-   const deleteButtonClick = el => {
+   const deleteButtonClick = () => {
       setOpenDeleteDialog(true);
    };
 
-   const handleCellClick = el => {
-      setSelectedRow(el.row);
+   const handleCellClick = event => {
+      setSelectedRow(event.row);
    };
 
    const closeEditDialog = (editBook, isCancel) => {
@@ -145,25 +149,18 @@ function Customer() {
       setOpenDeleteDialog(false);
    };
 
+   const closeSnackBar = () => {
+      setOpenSnackBar(false);
+   };
+
    useEffect(() => {
       fetchAllCustomer();
-   }, []);
+   }, [fetchAllCustomer]);
 
    return (
       <div className="data-grid">
          <div className="table">
-            {loading && (
-               <div className="loading-row">
-                  <p>Loading...</p>
-                  <div className="lds-ellipsis">
-                     <div></div>
-                     <div></div>
-                     <div></div>
-                     <div></div>
-                  </div>
-               </div>
-            )}
-
+            {loading && <Loading></Loading>}
             <div className="outside-button">
                <button
                   onClick={addBookClick}
@@ -189,13 +186,17 @@ function Customer() {
             openAddDialog={openAddDialog}
             closeAddDialog={closeAdddDialog}
          ></AddCustomerDialog>
-         <DeleteDialog
-            closeDeleteDialog={closeDeleteDialog}
-            openDeleteDialog={openDeleteDialog}
-         ></DeleteDialog>
+
+         <ConfirmDialog
+            close={closeDeleteDialog}
+            open={openDeleteDialog}
+            message="Delete this customer?"
+         ></ConfirmDialog>
+
          <SnackBar
             openSnackBar={openSnackBar}
             message={snackBarMessage}
+            onClose={closeSnackBar}
          ></SnackBar>
       </div>
    );

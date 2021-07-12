@@ -36,5 +36,8 @@ export async function changeConfigValue(configs) {
       body: JSON.stringify(newConfigs),
    });
 
-   console.log(res);
+   if (res.ok) {
+      return true;
+   }
+   return false;
 }

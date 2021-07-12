@@ -1,7 +1,8 @@
 import { useEffect, useState, memo, useMemo, useCallback } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import Select from 'react-select';
-import { isNull, find, isUndefined } from 'lodash';
+import cache from 'memory-cache';
+import { isNull, find, isUndefined, isInteger } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
    faHistory,
@@ -10,10 +11,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { getAllCustomer } from 'api/customer';
 import { getAllBooks } from 'api/book';
-import { deleteBillApi, getAllBill, createBill } from 'api/bill';
+import { deleteBillApi, getAllBill, createBill, updateBillApi } from 'api/bill';
 import { getConfigItem } from 'api/settings';
 import SnackBar from 'components/Common/SnackBar';
-import DeleteDialog from './DeleteDialog';
+import ConfirmDialog from 'components/Common/ConfirmDialog';
+import Loading from 'components/Common/Loading';
+import RenderCellExpand from 'components/Common/RenderCellExpand';
+import { time } from 'Config/cache';
 import UpdateDialog from './UpdateDialog';
 import BookList from './BookList';
 
@@ -24,7 +28,9 @@ function Order() {
 
    const [currentBookList, setCurrentBookList] = useState([]);
 
-   const [selectedBook, setSelectedBook] = useState({});
+   const [selectedBook, setSelectedBook] = useState({ amount: 1 });
+
+   const [loading, setLoading] = useState(true);
 
    const [isDisableAddBook, setIsDisableAddBook] = useState(true);
 
@@ -35,6 +41,8 @@ function Order() {
    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
    const [currentDebt, setCurrentDebt] = useState({});
+
+   const [updateDebt, setUpdateDebt] = useState(0);
 
    const [minBookLeft, setMinBookLeft] = useState({});
 
@@ -56,6 +64,7 @@ function Order() {
    const columns = useMemo(
       () => [
          { field: 'id', headerName: 'Bill ID', width: 150 },
+         { field: 'customerId', headerName: 'Customer ID', width: 150 },
          { field: 'name', headerName: 'Customer Name', width: 200 },
          {
             field: 'phone',
@@ -66,6 +75,7 @@ function Order() {
             field: 'date',
             headerName: 'Create Date',
             width: 150,
+            renderCell: RenderCellExpand,
          },
 
          {
@@ -122,7 +132,14 @@ function Order() {
    }, []);
 
    const fetchAllBook = useCallback(async () => {
-      const data = await getAllBooks();
+      const cacheData = cache.get('api/books/order');
+      let data = await getAllBooks();
+      if (cacheData) {
+         data = cacheData;
+      } else {
+         data = await getAllBooks();
+         cache.put('api/books/order', data, time);
+      }
       if (isNull(data)) {
          setOpenSnackBar(true);
          return;
@@ -131,7 +148,14 @@ function Order() {
    }, [assignBookLabel]);
 
    const fetchAllCustomer = useCallback(async () => {
-      const data = await getAllCustomer();
+      let data;
+      const cacheData = cache.get('api/customer/order');
+      if (cacheData) {
+         data = cacheData;
+      } else {
+         data = await getAllCustomer();
+         cache.put('api/customer/order', data, time);
+      }
       if (isNull(data)) {
          setOpenSnackBar(true);
          return;
@@ -139,20 +163,13 @@ function Order() {
       assignCustomerLabel(data);
    }, [assignCustomerLabel]);
 
-   const fetchAllBill = useCallback(async () => {
-      const data = await getAllBill();
-      if (isNull(data)) {
-         setOpenSnackBar({
-            isOpen: true,
-            message: 'Fail to get data',
-         });
-         return;
-      }
+   const refactorBill = useCallback(data => {
       const temp = [];
       for (const bill of data) {
          try {
             temp.push({
                id: bill.id,
+               customerId: bill.customer.id,
                name: bill.customer.name,
                phone: bill.customer.phoneNumber,
                date: Date(bill.dateTime),
@@ -163,8 +180,23 @@ function Order() {
             continue;
          }
       }
-      setBill(temp);
+      return temp;
    }, []);
+
+   const fetchAllBill = useCallback(async () => {
+      setLoading(true);
+      const data = await getAllBill();
+      if (isNull(data)) {
+         setOpenSnackBar({
+            isOpen: true,
+            message: 'Fail to get data',
+         });
+         return;
+      }
+      const rowData = refactorBill(data);
+      setLoading(false);
+      setBill(rowData);
+   }, [refactorBill]);
 
    const getConfig = useCallback(async () => {
       const min = await getConfigItem('MinimumAmountBookLeftAfterSelling');
@@ -175,6 +207,8 @@ function Order() {
 
    const handleCellClick = event => {
       setSelectedRow(event.row);
+      const foundCustomer = find(customerOption, { id: event.row.customerId });
+      if (!isUndefined(foundCustomer)) setUpdateDebt(foundCustomer.currentDebt);
    };
 
    const deleteBill = () => {
@@ -190,24 +224,56 @@ function Order() {
    };
 
    const priceChange = event => {
+      const value = parseInt(event.target.value);
       setSelectedBook({
          ...selectedBook,
-         price: parseInt(event.target.value),
+         price: parseInt(value),
       });
-      setIsDisableAddBook(false);
+
+      if (isInteger(value) && value > 0) setIsDisableAddBook(false);
+      else setIsDisableAddBook(true);
    };
 
+   const checkCanAddMore = useCallback(
+      bookList => {
+         if (bookList.length) {
+            let sum = 0;
+            for (const el of bookList) {
+               sum += el.price * el.amount;
+            }
+            if (maximumDebt.status && sum + currentDebt > maximumDebt.value) {
+               setIsDisableAddBook(true);
+               alert('The total price is bigger than customer debt');
+               return false;
+            }
+            setIsDisableAddBook(false);
+            setTotalMoney(sum);
+            return true;
+         }
+      },
+      [currentDebt, maximumDebt]
+   );
+
    const addBookList = useCallback(() => {
-      const foundBook = find(currentBookList, selectedBook);
-      if (foundBook) {
-         foundBook.amount++;
-         const newList = currentBookList.filter(el => el.id !== foundBook.id);
-         newList.push(foundBook);
-         setCurrentBookList(newList);
-         return;
+      if (!invalidAmount) {
+         const foundBook = find(currentBookList, { id: selectedBook.id });
+         if (foundBook) {
+            foundBook.amount++;
+            foundBook.price = selectedBook.price;
+            const newList = currentBookList.filter(
+               el => el.id !== foundBook.id
+            );
+            newList.push(foundBook);
+            if (checkCanAddMore(newList)) {
+               setCurrentBookList(newList);
+            }
+            return;
+         }
+         if (checkCanAddMore([...currentBookList, selectedBook])) {
+            setCurrentBookList([...currentBookList, selectedBook]);
+         }
       }
-      setCurrentBookList([...currentBookList, selectedBook]);
-   }, [currentBookList, selectedBook]);
+   }, [currentBookList, selectedBook, invalidAmount, checkCanAddMore]);
 
    const removeBook = useCallback(
       bookName => {
@@ -221,6 +287,10 @@ function Order() {
       event => {
          let amount = parseInt(event.target.value);
 
+         if (!isInteger(amount) || amount < 0) {
+            setInvalidAmount(true);
+            return;
+         }
          if (amount < 0) {
             amount = 1;
          } else if (
@@ -237,16 +307,43 @@ function Order() {
       [minBookLeft, selectedBook]
    );
 
+   const startUpdateBill = useCallback(
+      async bookList => {
+         setLoading(true);
+         const result = await updateBillApi(selectedRow.id, bookList);
+         if (result) {
+            setOpenSnackBar({
+               isOpen: true,
+               message: 'Action complete loading data...',
+            });
+            setTimeout(fetchAllBill, 2000);
+         } else {
+            setLoading(false);
+            setOpenSnackBar({
+               isOpen: true,
+               message: 'Fail to update data',
+            });
+         }
+      },
+      [selectedRow, fetchAllBill]
+   );
+
    const closeDeleteDialog = isConfirm => {
       setOpenDeleteDialog(false);
       if (isConfirm) {
+         setOpenSnackBar({
+            isOpen: true,
+            message: 'Action complete loading data...',
+         });
          deleteBillApi(selectedRow.id);
          setTimeout(fetchAllBill, 2000);
       }
    };
 
-   const closeUpdateDialog = () => {
+   const closeUpdateDialog = (bookList, isCancel) => {
       setOpenUpdateDialog(false);
+      if (isCancel) return;
+      startUpdateBill(bookList);
    };
 
    const addNewBill = () => {
@@ -263,7 +360,6 @@ function Order() {
             isOpen: true,
             message: 'Action complete loading data...',
          });
-
          setTimeout(() => {
             fetchAllBill();
          }, 2000);
@@ -274,36 +370,19 @@ function Order() {
       setOpenUpdateDialog(true);
    };
 
+   const closeSnackBar = () => {
+      setOpenSnackBar({
+         isOpen: false,
+         message: '',
+      });
+   };
+
    useEffect(() => {
       fetchAllCustomer();
       fetchAllBook();
       fetchAllBill();
       getConfig();
    }, [fetchAllBill, fetchAllBook, fetchAllCustomer, getConfig]);
-
-   useEffect(() => {
-      let sum = 0;
-      for (const el of currentBookList) {
-         sum += el.price * el.amount;
-      }
-      if (maximumDebt.status && sum + currentDebt > maximumDebt.value) {
-         setIsDisableAddBook(true);
-
-         setOpenSnackBar({
-            isOpen: true,
-            message: 'The total price is bigger than customer debt',
-         });
-
-         setTimeout(() => {
-            setOpenSnackBar({
-               isOpen: false,
-               message: '',
-            });
-         }, 3000);
-      } else setIsDisableAddBook(false);
-
-      setTotalMoney(sum);
-   }, [currentBookList, currentDebt, maximumDebt]);
 
    useEffect(() => {
       if (!isUndefined(selectedCustomer)) {
@@ -351,6 +430,9 @@ function Order() {
                   )}
                </div>
                <div className="select-div">
+                  {maximumDebt.status && (
+                     <p>Maximum customer debt: {maximumDebt.value}</p>
+                  )}
                   <p>Price</p>
                   <input
                      onChange={priceChange}
@@ -392,23 +474,31 @@ function Order() {
          </div>
          <div className="order-table">
             <h4 className="main-title">ALL BILL</h4>
-            <DataGrid
-               onCellClick={handleCellClick}
-               columns={columns}
-               rows={bills}
-            ></DataGrid>
+            <div className="order-data">
+               {loading && <Loading></Loading>}
+               <DataGrid
+                  onCellClick={handleCellClick}
+                  columns={columns}
+                  rows={bills}
+               ></DataGrid>
+            </div>
          </div>
-         <DeleteDialog
-            closeDeleteDialog={closeDeleteDialog}
-            openDeleteDialog={openDeleteDialog}
-         ></DeleteDialog>
+         <ConfirmDialog
+            close={closeDeleteDialog}
+            open={openDeleteDialog}
+            message="Delete this bill?"
+         ></ConfirmDialog>
          <SnackBar
             openSnackBar={openSnackBar.isOpen}
             message={openSnackBar.message}
+            onClose={closeSnackBar}
          ></SnackBar>
          <UpdateDialog
             books={bookOption}
             billId={selectedRow.id}
+            maximumDebt={maximumDebt}
+            minBookLeft={minBookLeft}
+            currentDebt={updateDebt}
             closeUpdateDialog={closeUpdateDialog}
             openUpdateDialog={openUpdateDialog}
          ></UpdateDialog>

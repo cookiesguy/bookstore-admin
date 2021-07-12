@@ -18,9 +18,12 @@ import {
    filterAndSearch,
 } from 'api/book';
 import SnackBar from 'components/Common/SnackBar';
+import Loading from 'components/Common/Loading';
+import ConfirmDialog from 'components/Common/ConfirmDialog';
+import RenderCellExpand from 'components/Common/RenderCellExpand';
+import { time } from 'Config/cache';
 import EditDiaLog from './EditBookDialog';
 import AddNewBookDialog from './AddBookDialog';
-import DeleteDialog from './DeleteDialog';
 
 function Books() {
    const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -48,7 +51,12 @@ function Books() {
    const columns = useMemo(
       () => [
          { field: 'id', headerName: 'ID', width: 90 },
-         { field: 'name', headerName: 'Name', width: 350 },
+         {
+            field: 'name',
+            headerName: 'Name',
+            width: 350,
+            renderCell: RenderCellExpand,
+         },
          {
             field: 'category',
             headerName: 'Category',
@@ -127,7 +135,7 @@ function Books() {
          data = cacheData;
       } else {
          data = await getAllBooks();
-         cache.put('api/books', data, 10000000);
+         cache.put('api/books', data, time);
       }
       if (data !== null) {
          const rowData = refactorRowData(data);
@@ -140,11 +148,6 @@ function Books() {
          setSnackBarMessage('Fail to get data');
       }
    }, [refactorRowData]);
-
-   useEffect(() => {
-      fetchAllBook();
-      fetchAllCategory();
-   }, [fetchAllBook, fetchAllCategory]);
 
    const editButtonClick = el => {
       setOpenEditDialog(true);
@@ -168,6 +171,10 @@ function Books() {
             setTimeout(fetchAllBook, 2000);
          }
       }
+   };
+
+   const closeSnackBar = () => {
+      setOpenSnackBar(false);
    };
 
    const addBookClick = () => {
@@ -242,21 +249,15 @@ function Books() {
       }
    };
 
+   useEffect(() => {
+      fetchAllBook();
+      fetchAllCategory();
+   }, [fetchAllBook, fetchAllCategory]);
+
    return (
       <div className="data-grid">
          <div className="table">
-            {loading && (
-               <div className="loading-row">
-                  <p>Loading...</p>
-                  <div className="lds-ellipsis">
-                     <div></div>
-                     <div></div>
-                     <div></div>
-                     <div></div>
-                  </div>
-               </div>
-            )}
-
+            {loading && <Loading></Loading>}
             <div className="outside-button">
                <button
                   onClick={addBookClick}
@@ -314,13 +315,16 @@ function Books() {
             closeAddDialog={closeAdddDialog}
             category={category}
          ></AddNewBookDialog>
-         <DeleteDialog
-            closeDeleteDialog={closeDeleteDialog}
-            openDeleteDialog={openDeleteDialog}
-         ></DeleteDialog>
+         <ConfirmDialog
+            close={closeDeleteDialog}
+            open={openDeleteDialog}
+            message="Delete this book?"
+         ></ConfirmDialog>
+
          <SnackBar
             openSnackBar={openSnackBar}
             message={snackBarMessage}
+            onClose={closeSnackBar}
          ></SnackBar>
       </div>
    );

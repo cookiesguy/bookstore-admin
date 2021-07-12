@@ -1,0 +1,14 @@
+.date-picker {
+   margin: 20px 0px;
+   display: flex;
+   align-items: center;
+   span {
+      font-weight: bold;
+      margin-right: 20px;
+      text-transform: uppercase;
+   }
+   flex-wrap: wrap;
+   div {
+      margin-right: 20px;
+   }
+}

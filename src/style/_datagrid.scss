@@ -127,8 +127,9 @@ $add-btn-color: linear-gradient(45deg, #f9b115, #f6960b);
 .loading-row {
    position: absolute;
    width: 100%;
-   height: 80%;
-   top: 120px;
+   height: 100%;
+   top: 0;
+   bottom: 0;
    background-color: #fff;
    z-index: 1;
    display: flex;
@@ -209,6 +210,9 @@ $add-btn-color: linear-gradient(45deg, #f9b115, #f6960b);
 .filter-category {
    width: 120px;
    padding: 10px;
+}
+.MuiDataGrid-main {
+   font-size: 0.8rem;
 }
 
 @keyframes lds-ellipsis1 {

@@ -503,8 +503,9 @@ li span {
 .loading-row {
   position: absolute;
   width: 100%;
-  height: 80%;
-  top: 120px;
+  height: 100%;
+  top: 0;
+  bottom: 0;
   background-color: #fff;
   z-index: 1;
   display: -webkit-box;
@@ -624,6 +625,10 @@ li span {
 .filter-category {
   width: 120px;
   padding: 10px;
+}
+
+.MuiDataGrid-main {
+  font-size: 0.8rem;
 }
 
 @-webkit-keyframes lds-ellipsis1 {
@@ -800,7 +805,7 @@ li span {
 
 .order-table {
   width: 100%;
-  height: 400px;
+  height: 600px;
   padding-top: 30px;
   margin-top: 40px;
   margin-left: 20px;
@@ -938,6 +943,11 @@ tr td {
           justify-content: space-evenly;
 }
 
+.order-data {
+  position: relative;
+  height: 600px;
+}
+
 .login-dialog {
   padding: 20px;
   display: -webkit-box;
@@ -969,5 +979,74 @@ tr td {
 
 .input-credential input {
   padding: 10px;
+}
+
+.select-area {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.money-input {
+  margin-right: 20px;
+}
+
+.customer-select {
+  width: 300px;
+  margin-right: 20px;
+}
+
+.update-payment-dialog {
+  padding: 20px;
+  height: 280px;
+  width: 300px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.input-payment {
+  height: 120px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.date-picker {
+  margin: 20px 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.date-picker span {
+  font-weight: bold;
+  margin-right: 20px;
+  text-transform: uppercase;
+}
+
+.date-picker div {
+  margin-right: 20px;
 }
 /*# sourceMappingURL=main.css.map */

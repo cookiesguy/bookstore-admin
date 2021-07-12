@@ -1,13 +1,8 @@
-import Snackbar from '@material-ui/core/Snackbar';
-import React, { useEffect } from 'react';
+import { Snackbar, Button, IconButton } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
+import { Fragment } from 'react';
 
-export default function SnackBar({ openSnackBar, message, isEnableClose }) {
-   const [open, setOpen] = React.useState(false);
-
-   useEffect(() => {
-      setOpen(openSnackBar);
-   }, [openSnackBar]);
-
+export default function SnackBar({ open, message, onClose }) {
    return (
       <div>
          <Snackbar
@@ -17,8 +12,23 @@ export default function SnackBar({ openSnackBar, message, isEnableClose }) {
             }}
             open={open}
             autoHideDuration={3000}
-            onClose={() => setOpen(false)}
+            onClose={onClose}
             message={message}
+            action={
+               <Fragment>
+                  <Button color="secondary" size="small" onClick={onClose}>
+                     ok
+                  </Button>
+                  <IconButton
+                     size="small"
+                     aria-label="close"
+                     color="inherit"
+                     onClick={onClose}
+                  >
+                     <Close fontSize="small" />
+                  </IconButton>
+               </Fragment>
+            }
          />
       </div>
    );

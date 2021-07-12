@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { Dialog } from '@material-ui/core';
 import { getConfigItem } from 'api/settings';
 import { validateNumber, validateString } from 'Helper/validate';
 import Option from './CategoryDialog';
 
-export default function EditDiaLog(props) {
+function EditDiaLog(props) {
    const [editBook, setEditBook] = useState({
       category: {
          name: '',
@@ -18,14 +18,6 @@ export default function EditDiaLog(props) {
    const [tempAmount, setTempAmount] = useState(0);
    const [minimumImportBook, setMinimumImportBook] = useState({});
    const [maximumBook, setMaximumBook] = useState({});
-
-   useEffect(() => {
-      setCategory(props.category);
-   }, [props.category]);
-   useEffect(() => {
-      setEditBook(props.book);
-      fetchConfig();
-   }, [props.book]);
 
    const fetchConfig = useCallback(async () => {
       const configOne = await getConfigItem('MinimumImportBook');
@@ -140,6 +132,14 @@ export default function EditDiaLog(props) {
       }
    };
 
+   useEffect(() => {
+      setCategory(props.category);
+   }, [props.category]);
+   useEffect(() => {
+      setEditBook(props.book);
+      fetchConfig();
+   }, [props.book, fetchConfig]);
+
    return (
       <Dialog open={props.openEditDialog}>
          <div className="dialog">
@@ -223,3 +223,5 @@ export default function EditDiaLog(props) {
       </Dialog>
    );
 }
+
+export default memo(EditDiaLog);

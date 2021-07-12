@@ -21,7 +21,7 @@
 }
 .order-table {
    width: 100%;
-   height: 400px;
+   height: 600px;
    padding-top: 30px;
    margin-top: 40px;
 
@@ -129,4 +129,8 @@ tr {
    margin-top: 50px;
    display: flex;
    justify-content: space-evenly;
+}
+.order-data {
+   position: relative;
+   height: 600px;
 }

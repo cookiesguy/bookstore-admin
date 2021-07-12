@@ -39,6 +39,7 @@ export async function createBill(customer, books) {
          price: el.price,
       };
       bookArray.push(book);
+      return 1;
    });
 
    const create = await fetch(`/api/bill/`, {
@@ -68,4 +69,32 @@ export async function createBill(customer, books) {
    if (!addBook.ok) return false;
 
    return true;
+}
+
+export async function updateBillApi(id, bookList) {
+   const bookArray = [];
+
+   bookList.map(el => {
+      const book = {
+         bookId: el.id,
+         amount: el.amount,
+         price: el.price,
+      };
+      bookArray.push(book);
+      return 1;
+   });
+
+   const res = await fetch(`/api/bill/detail/update/${id}`, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+         Accept: 'application/json',
+      },
+      body: JSON.stringify(bookArray),
+   });
+
+   if (res.ok) {
+      return true;
+   }
+   return false;
 }

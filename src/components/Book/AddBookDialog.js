@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Dialog } from '@material-ui/core';
 import Option from './CategoryDialog';
 import { validateString, validateNumber } from 'Helper/validate';
 import { getConfigItem } from 'api/settings';
 
-export default function AddNewBookDialog(props) {
+function AddNewBookDialog(props) {
    const [newBook, setNewBook] = useState({
       category: {
          id: 1,
@@ -168,3 +168,5 @@ export default function AddNewBookDialog(props) {
       <div></div>
    );
 }
+
+export default memo(AddNewBookDialog);

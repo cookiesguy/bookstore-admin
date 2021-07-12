@@ -13,7 +13,10 @@ function Setting() {
 
    const [openSnackBar, setOpenSnackBar] = useState(false);
 
-   const [openDifferenceAnnounce, setOpenDifferenceAnnounce] = useState(false);
+   const [successSnackBar, setSuccessSnackBar] = useState({
+      isOpen: false,
+      message: '',
+   });
 
    const [isCheck, setIsCheck] = useState({
       MinimumImportBook: true,
@@ -23,6 +26,18 @@ function Setting() {
    });
 
    const [loading, setLoading] = useState(true);
+
+   const fetchData = useCallback(async () => {
+      const res = await getAllConfig();
+      if (isNull(res)) {
+         setOpenSnackBar(true);
+         setLoading(false);
+      } else {
+         setConfigs(res);
+         setNewConfigs(res);
+         setLoading(false);
+      }
+   }, []);
 
    const handleToggleChange = event => {
       setIsCheck({ ...isCheck, [event.target.name]: event.target.checked });
@@ -45,30 +60,36 @@ function Setting() {
       setNewConfigs([...configs]);
    };
 
-   const saveButtonClick = () => {
-      if (isEqual(configs, newConfigs)) {
-         setOpenDifferenceAnnounce(true);
-         setTimeout(() => {
-            setOpenDifferenceAnnounce(false);
-         }, 3000);
-      } else {
+   const startChangeConfig = useCallback(async () => {
+      const result = await changeConfigValue(newConfigs);
+      if (result) {
+         setSuccessSnackBar({ isOpen: true, message: 'Save successfully' });
          changeConfigValue(newConfigs);
          setLoading(true);
          setTimeout(fetchData, 2000);
+      } else {
+         setSuccessSnackBar({
+            isOpen: false,
+            message: 'An error occurred, cant save now',
+         });
+      }
+   }, [newConfigs, fetchData]);
+
+   const saveButtonClick = () => {
+      if (isEqual(configs, newConfigs)) {
+         alert('There are no difference to change');
+      } else {
+         startChangeConfig();
       }
    };
 
-   const fetchData = useCallback(async () => {
-      const res = await getAllConfig();
-      if (isNull(res)) {
-         setOpenSnackBar(true);
-         setLoading(false);
-      } else {
-         setConfigs(res);
-         setNewConfigs(res);
-         setLoading(false);
-      }
-   }, []);
+   const closeSnackBar = () => {
+      setOpenSnackBar(false);
+   };
+
+   const closeSuccessSnackBar = () => {
+      setSuccessSnackBar({ isOpen: false, message: '' });
+   };
 
    useEffect(() => {
       setLoading(true);
@@ -128,7 +149,7 @@ function Setting() {
                            onChange={handleToggleChange}
                            checked={isCheck.MaximumAmountBookLeftBeforeImport}
                            color="primary"
-                           name="MinimumAmountBookLeftAfterSelling"
+                           name="MaximumAmountBookLeftBeforeImport"
                            inputProps={{ 'aria-label': 'primary checkbox' }}
                         />
                      </div>
@@ -170,7 +191,7 @@ function Setting() {
                            onChange={handleToggleChange}
                            checked={isCheck.MinimumAmountBookLeftAfterSelling}
                            color="primary"
-                           name="MaximumAmountBookLeftBeforeImport"
+                           name="MinimumAmountBookLeftAfterSelling"
                            inputProps={{ 'aria-label': 'primary checkbox' }}
                         />
                      </div>
@@ -197,13 +218,13 @@ function Setting() {
                      </div>
                   </div>
                   <div className="config-item">
-                     <div className="button-div">
+                     <div>
                         <Button
                            variant="contained"
                            color="primary"
                            onClick={saveButtonClick}
                         >
-                           save
+                           save value
                         </Button>
                         <Button
                            onClick={resetButtonClick}
@@ -212,18 +233,19 @@ function Setting() {
                         >
                            reset
                         </Button>
+                        <SnackBar
+                           openSnackBar={successSnackBar.isOpen}
+                           message={successSnackBar.message}
+                           onClose={closeSuccessSnackBar}
+                        ></SnackBar>
                      </div>
                   </div>
-                  <SnackBar
-                     openSnackBar={openDifferenceAnnounce}
-                     message="There are no difference to change"
-                     isEnableClose={false}
-                  ></SnackBar>
                </div>
             ) : (
                <SnackBar
                   openSnackBar={openSnackBar}
                   message="Cant get data, network error"
+                  onClose={closeSnackBar}
                ></SnackBar>
             )}
          </div>

@@ -1,16 +1,18 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import Select from 'react-select';
-import { isUndefined, find } from 'lodash';
+import { isUndefined, find, isInteger } from 'lodash';
 import { Dialog } from '@material-ui/core';
 import { getBillDetail } from 'api/bill';
 import BookList from './BookList';
 
-export default function UpdateDialog({
+function UpdateDialog({
    closeUpdateDialog,
    openUpdateDialog,
    books,
    billId,
+   minBookLeft,
+   maximumDebt,
+   currentDebt,
 }) {
    const [bookOption, setBookOption] = useState([]);
 
@@ -21,50 +23,99 @@ export default function UpdateDialog({
    const [isDisableAddBook, setIsDisableAddBook] = useState(true);
 
    const [totalMoney, setTotalMoney] = useState(0);
+   const [invalidAmount, setInvalidAmount] = useState(false);
 
    const bookComboboxOnchange = event => {
       setSelectedBook({ ...selectedBook, ...event });
    };
 
    const priceChange = event => {
+      const value = parseInt(event.target.value);
       setSelectedBook({
          ...selectedBook,
-         price: parseInt(event.target.value),
+         price: parseInt(value),
       });
-      setIsDisableAddBook(false);
+
+      if (isInteger(value) && value > 0) setIsDisableAddBook(false);
+      else setIsDisableAddBook(true);
    };
 
-   const addBookList = () => {
-      const foundBook = find(currentBookList, selectedBook);
-      if (foundBook) {
-         foundBook.amount++;
-         const newList = currentBookList.filter(el => el.id !== foundBook.id);
-         newList.push(foundBook);
-         setCurrentBookList(newList);
-         return;
+   const checkCanAddMore = useCallback(
+      bookList => {
+         if (bookList.length) {
+            let sum = 0;
+            for (const el of bookList) {
+               sum += el.price * el.amount;
+            }
+            if (maximumDebt.status && sum + currentDebt > maximumDebt.value) {
+               setIsDisableAddBook(true);
+               alert('The total price is bigger than customer debt');
+               return false;
+            }
+            setIsDisableAddBook(false);
+            setTotalMoney(sum);
+            return true;
+         }
+      },
+      [currentDebt, maximumDebt]
+   );
+
+   const addBookList = useCallback(() => {
+      if (!invalidAmount) {
+         const foundBook = find(currentBookList, { id: selectedBook.id });
+         if (foundBook) {
+            foundBook.amount++;
+            foundBook.price = selectedBook.price;
+            const newList = currentBookList.filter(
+               el => el.id !== foundBook.id
+            );
+            newList.push(foundBook);
+            if (checkCanAddMore(newList)) {
+               setCurrentBookList(newList);
+            }
+            return;
+         }
+         if (checkCanAddMore([...currentBookList, selectedBook])) {
+            setCurrentBookList([...currentBookList, selectedBook]);
+         }
       }
-      setCurrentBookList([...currentBookList, selectedBook]);
-   };
+   }, [currentBookList, invalidAmount, selectedBook, checkCanAddMore]);
 
    const removeBook = bookName => {
       const newList = currentBookList.filter(el => el.label !== bookName);
       setCurrentBookList(newList);
    };
 
-   const changeQuantity = event => {
-      let amount = parseInt(event.target.value);
-      if (amount < 0) {
-         amount = 1;
-      }
-      setSelectedBook({ ...selectedBook, amount: amount });
-   };
+   const changeQuantity = useCallback(
+      event => {
+         let amount = parseInt(event.target.value);
 
-   async function fetchBillDetail() {
+         if (!isInteger(amount) || amount < 0) {
+            setInvalidAmount(true);
+            return;
+         }
+         if (amount < 0) {
+            amount = 1;
+         } else if (
+            minBookLeft.status &&
+            (selectedBook.currentAmount - amount < minBookLeft.value ||
+               isNaN(amount))
+         ) {
+            setInvalidAmount(true);
+            return;
+         }
+         setInvalidAmount(false);
+         setSelectedBook({ ...selectedBook, amount: amount });
+      },
+      [minBookLeft, selectedBook]
+   );
+
+   const fetchBillDetail = useCallback(async () => {
       try {
          const data = await getBillDetail(billId);
 
          const temp = [];
-         console.log(data);
+
          for (const el of data) {
             temp.push({
                id: el.book.id,
@@ -76,19 +127,11 @@ export default function UpdateDialog({
          }
          setCurrentBookList(temp);
       } catch (error) {}
-   }
-
-   useEffect(() => {
-      if (!isUndefined(billId)) fetchBillDetail();
    }, [billId]);
 
    useEffect(() => {
-      let sum = 0;
-      for (const el of currentBookList) {
-         sum += el.price * el.amount;
-      }
-      setTotalMoney(sum);
-   }, [currentBookList]);
+      if (!isUndefined(billId)) fetchBillDetail();
+   }, [billId, fetchBillDetail]);
 
    useEffect(() => {
       setBookOption(books);
@@ -108,14 +151,24 @@ export default function UpdateDialog({
                   ></Select>
                </div>
                <div className="select-div-dialog">
-                  <p>amount</p>
+                  {minBookLeft.status && (
+                     <p>Minimum book left after sell: {minBookLeft.value}</p>
+                  )}
+                  <p>Amount</p>
                   <input
                      defaultValue="1"
                      onChange={changeQuantity}
                      type="number"
                   ></input>
+                  {invalidAmount && (
+                     <p className="error">Invalid book amount </p>
+                  )}
                </div>
                <div className="select-div-dialog">
+                  {maximumDebt.status && (
+                     <p>Maximum customer debt: {maximumDebt.value}</p>
+                  )}
+                  <p>Current debt: {currentDebt}</p>
                   <p>Price</p>
                   <input
                      onChange={priceChange}
@@ -152,13 +205,14 @@ export default function UpdateDialog({
             <div className="button-div-order">
                <button
                   className="save-button"
-                  onClick={e => closeUpdateDialog()}
+                  disabled={isDisableAddBook}
+                  onClick={e => closeUpdateDialog(currentBookList, false)}
                >
                   Update
                </button>
                <button
                   className="cancel-button"
-                  onClick={e => closeUpdateDialog()}
+                  onClick={e => closeUpdateDialog(null, true)}
                >
                   Cancel
                </button>
@@ -167,3 +221,5 @@ export default function UpdateDialog({
       </Dialog>
    );
 }
+
+export default memo(UpdateDialog);
