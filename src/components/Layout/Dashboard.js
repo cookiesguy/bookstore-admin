@@ -1,5 +1,7 @@
 import { Switch, Route } from 'react-router-dom';
 import { Dialog, Button } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { useLogin } from 'Context/LoginContext';
 import { userLogin } from 'api/authen';
@@ -47,7 +49,10 @@ export default function Dashboard() {
                <Route exact path="/">
                   <div className="access">
                      <div className="card">
-                        <p>Total user online</p>
+                        <FontAwesomeIcon size={'10x'} icon={faBook} />
+                        <h1 style={{ marginLeft: '60px' }}>
+                           WELCOME TO BOOK STORE
+                        </h1>
                      </div>
                   </div>
                </Route>
