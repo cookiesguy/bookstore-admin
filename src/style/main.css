@@ -835,7 +835,7 @@ li span {
 
 .book-list {
   width: 400px;
-  height: 455px;
+  max-height: 455px;
   margin-left: 160px;
 }
 
@@ -940,7 +940,7 @@ tr td {
 }
 
 .button-div-order {
-  margin-top: 50px;
+  margin-top: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

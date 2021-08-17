@@ -42,7 +42,7 @@
 }
 .book-list {
    width: 400px;
-   height: 455px;
+   max-height: 455px;
    p {
       margin-top: 10px;
    }
@@ -126,7 +126,7 @@ tr {
    }
 }
 .button-div-order {
-   margin-top: 50px;
+   margin-top: 20px;
    display: flex;
    justify-content: space-evenly;
 }
